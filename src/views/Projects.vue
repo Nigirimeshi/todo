@@ -6,8 +6,8 @@
       <!-- 拓展面板 -->
       <v-expansion-panels>
         <v-expansion-panel
-          v-for="project in myProjects"
-          :key="project.title"
+          v-for="project in myProjects(user.name)"
+          :key="project.id"
         >
           <v-expansion-panel-header>{{ project.title }}</v-expansion-panel-header>
           <v-expansion-panel-content>
@@ -22,28 +22,20 @@
 </template>
 
 <script>
-import { watchChanges } from "@/plugins/firebase";
+import {mapGetters} from "vuex"
 
 export default {
   data() {
     return {
-      projects: [],
       user: {
         'name': 'Yang',
       }
     }
   },
   computed: {
-    myProjects() {
-      return this.projects.filter(project => {
-        return project.person === this.user.name;
-      })
-    }
-  },
-  created() {
-    // 实时更新数据。
-    // TODO 将 firebase 相关操作抽象成接口。
-    watchChanges('projects', this.projects)
+    ...mapGetters('projects', [
+      'myProjects'
+    ]),
   },
 }
 </script>

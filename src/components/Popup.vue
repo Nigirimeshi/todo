@@ -89,8 +89,6 @@
 </template>
 
 <script>
-import db from '@/plugins/firebase'
-
 export default {
   data: () => ({
     dialog: false,
@@ -127,7 +125,7 @@ export default {
         status: 'ongoing',  // TODO 状态集中定义
       }
       
-      db.collection('projects').add(project).then(() => {
+      this.$store.dispatch('projects/addProject', {project: project}).then(() => {
         this.loading = false; // 恢复提交按钮
         this.dialog = false;  // 关闭模态框
         this.$emit('showSnackbar')  // 触发事件，显示消息条，提示用户已提交完成

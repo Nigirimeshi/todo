@@ -12,7 +12,7 @@
                 small
                 depressed
                 class="grey--text"
-                @click="sortBy('title')"
+                @click="sortBy({prop: 'title'})"
                 v-bind="attrs"
                 v-on="on"
               >
@@ -31,7 +31,7 @@
                 small
                 depressed
                 class="grey--text"
-                @click="sortBy('person')"
+                @click="sortBy({prop: 'person'})"
                 v-bind="attrs"
                 v-on="on"
               >
@@ -83,14 +83,14 @@
 </template>
 
 <script>
-import {watchChanges } from "@/plugins/firebase";
+import {mapState, mapMutations, mapActions} from "vuex"
 
 export default {
-  data() {
-    return {
-      projects: [],
-      projectsIndex: new Map(),
-    }
+  computed: {
+    ...mapState('projects', [
+        'projects',
+      ]
+    ),
   },
   methods: {
     // 根据状态显示颜色。
@@ -104,19 +104,21 @@ export default {
           return '#FF6347'
       }
     },
-    sortBy: function (prop) {
-      this.projects.sort(((a, b) => a[prop] < b[prop] ? -1 : 1))
-    },
+    ...mapMutations('projects', [
+      'sortBy',
+    ]),
+    ...mapActions('projects', [
+      'watcher',
+    ]),
   },
-  created() {
+  mounted() {
     // 实时更新数据。
-    // TODO 将 firebase 相关操作抽象成接口。
-    watchChanges('projects', this.projects)
+    this.watcher();
   },
 }
 </script>
 
-<style>
+<style scoped>
 .project.complete {
   border-left: 4px solid lightseagreen;
 }
