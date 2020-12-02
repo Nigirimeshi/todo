@@ -4,7 +4,7 @@
     v-model="dialog"
     max-width="600px"
   >
-    <!-- 添加新项目按钮 -->
+    <!-- 创建新项目按钮 -->
     <template v-slot:activator="{ on, attrs }">
       <v-btn
         depressed
@@ -85,34 +85,48 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+  
   </v-dialog>
 </template>
 
 <script>
+import {mapState, mapMutations, mapActions} from "vuex"
+
 export default {
   data: () => ({
     dialog: false,
-    valid: true,
     loading: false,
-    snackbar: false,
     
+    valid: true,
     title: '',
     titleRules: [
       v => !!v || 'Title is required',
+      // FIXME TypeError: Cannot read property 'length' of undefined
       v => v.length <= 20 || 'Title must be less than 20 characters',
     ],
     content: '',
     contentRules: [
       v => !!v || 'Content is reuqired',
+      // FIXME TypeError: Cannot read property 'length' of undefined
       v => v.length <= 2048 || 'Content must be less than 2048 characters',
     ],
     due: null,
-    
-    user: {
-      name: 'Yang',  // TODO 获取当前用户
-    },
   }),
+  computed: {
+    ...mapState([
+      'snackbar',
+    ]),
+    ...mapState('profile', [
+      'profile',
+    ]),
+  },
   methods: {
+    ...mapMutations([
+      'showSnackbar',
+    ]),
+    ...mapActions('projects', [
+      'addProject',
+    ]),
     submit() {
       // 提交时按钮变成加载中。
       this.loading = true;
@@ -121,14 +135,14 @@ export default {
         title: this.title,
         content: this.content,
         due: this.due,
-        person: this.user.name,
+        person: this.profile.name,
         status: 'ongoing',  // TODO 状态集中定义
       }
       
-      this.$store.dispatch('projects/addProject', {project: project}).then(() => {
+      this.addProject({project: project}).then(() => {
         this.loading = false; // 恢复提交按钮
         this.dialog = false;  // 关闭模态框
-        this.$emit('showSnackbar')  // 触发事件，显示消息条，提示用户已提交完成
+        this.showSnackbar();  // 触发事件，显示消息条，提示用户已提交完成
       })
       
     },

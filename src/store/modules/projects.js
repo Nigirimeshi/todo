@@ -2,7 +2,17 @@ import {projectsCollection} from "@/plugins/firebase";
 
 // initial state
 const state = {
-  projects: [],
+  projects: [
+    /*
+    {
+      id,
+      title,
+      content,
+      person,
+      status,
+    }
+    */
+  ],
   watched: false,
 }
 
@@ -35,7 +45,7 @@ const mutations = {
     }
   },
   
-  watched: (state) => {
+  beginWatching: (state) => {
     state.watched = true;
   }
 }
@@ -45,6 +55,7 @@ const actions = {
   // 实时更新 projects，只允许执行一次
   watcher({commit}) {
     if (!state.watched) {
+      commit('beginWatching')
       // TODO 抽象操作数据接口
       // unsubscribe can be called to stop listening for changes
       projectsCollection.onSnapshot(ref => {
@@ -53,7 +64,6 @@ const actions = {
           commit('changeProject', {newIndex, oldIndex, doc, type})
         })
       })
-      commit('watched')
     }
   },
   

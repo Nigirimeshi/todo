@@ -1,23 +1,25 @@
 <template>
   <v-app :style="{background: $vuetify.theme.themes[theme].background}">
-    <div class="grey lighten-4">
-      <Navbar/>
+    <div class="grey lighten-4 fill-height">
+      <Nav/>
       <v-main>
         <v-container fluid class="px-4">
           <router-view></router-view>
         </v-container>
       </v-main>
     </div>
+    
+    <v-footer app></v-footer>
   </v-app>
 </template>
 
 <script>
-import Navbar from "@/components/Navbar.vue"
+import Nav from "@/components/Nav";
 
 export default {
   name: 'App',
   components: {
-    Navbar,
+    Nav,
   },
   computed: {
     theme() {
@@ -25,7 +27,7 @@ export default {
     }
   },
   data: () => ({
-    //
+    drawer: false,
   }),
 };
 </script>
