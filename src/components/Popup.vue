@@ -24,21 +24,23 @@
         <v-form ref="form" v-model="valid">
           <!-- 标题输入框 -->
           <v-text-field
+            label="Title"
+            prepend-icon="mdi-folder"
+            :counter="20"
+            required
             v-model="title"
             :rules="titleRules"
-            :counter="20"
-            prepend-icon="mdi-folder"
-            label="Title"
-            required
           ></v-text-field>
           <!-- 内容输入框 -->
           <v-textarea
+            label="Content"
+            prepend-icon="mdi-pencil"
+            clearable
+            clear-icon="mdi-close-circle"
+            required
             v-model="content"
             :rules="contentRules"
             :counter="2048"
-            prepend-icon="mdi-pencil"
-            label="Content"
-            required
           ></v-textarea>
           <!-- 日期选择框 -->
           <v-menu
@@ -113,9 +115,6 @@ export default {
     due: null,
   }),
   computed: {
-    ...mapState([
-      'snackbar',
-    ]),
     ...mapState('profile', [
       'profile',
     ]),

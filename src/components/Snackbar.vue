@@ -21,6 +21,7 @@
 import {mapMutations} from "vuex"
 
 export default {
+  // TODO 实现失败，警告，成功通用提示条组件
   props: ['title'],
   computed: {
     snackbar: {

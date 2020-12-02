@@ -1,12 +1,21 @@
 <template>
   <div class="projects">
-    <h1 class="subtitle-1 grey--text">Projects</h1>
+    <v-breadcrumbs :items="breadcrumbs" class="pa-0">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item
+          :href="item.href"
+          :disabled="item.disabled" class="grey--text subtitle-1"
+        >
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
     
     <v-container class="my-5">
       <!-- 拓展面板 -->
       <v-expansion-panels>
         <v-expansion-panel
-          v-for="project in myProjects(user.name)"
+          v-for="project in myProjects(profile.name)"
           :key="project.id"
         >
           <v-expansion-panel-header>{{ project.title }}</v-expansion-panel-header>
@@ -22,17 +31,22 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex"
+import {mapState, mapGetters} from "vuex"
 
 export default {
-  data() {
-    return {
-      user: {
-        'name': 'Yang',
-      }
-    }
-  },
+  data: () => ({
+    breadcrumbs: [
+      {
+        text: 'Projects',
+        disabled: true,
+        href: '/projects',
+      },
+    ],
+  }),
   computed: {
+    ...mapState('profile', [
+      'profile',
+    ]),
     ...mapGetters('projects', [
       'myProjects'
     ]),

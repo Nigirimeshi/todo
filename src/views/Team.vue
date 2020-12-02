@@ -1,6 +1,15 @@
 <template>
   <div class="team">
-    <h1 class="subtitle-1 grey--text">Team</h1>
+    <v-breadcrumbs :items="breadcrumbs" class="pa-0">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item
+          :href="item.href"
+          :disabled="item.disabled" class="grey--text subtitle-1"
+        >
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
     
     <v-container class="my-5">
       <!-- 成员介绍卡片 -->
@@ -41,6 +50,13 @@
 export default {
   data() {
     return {
+      breadcrumbs: [
+        {
+          text: 'Team',
+          disabled: true,
+          href: '/team',
+        },
+      ],
       team: [
         {name: 'Tom', role: 'Web developer', avatar: '/avatar01.jpg'},
         {name: 'Jack', role: 'Graphic designer', avatar: '/avatar02.jpg'},

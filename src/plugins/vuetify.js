@@ -9,15 +9,16 @@ export default new Vuetify({
     themes: {
       light: {
         primary: '#20B2AA',
-        // primary: colors.indigo,
-        // secondary: colors.grey.darken1,
-        // accent: colors.shades.black,
-        // error: colors.red.accent3,
-        warning: colors.orange,
-        backgroundColor: colors.grey.lighten4,
+        secondary: '#424242',
+        accent: '#82B1FF',
+        info: '#2196F3',
+        success: '#20B2AA',
+        warning: '#FFA500',
+        error: '#FF6347',
+        background: colors.grey.lighten4,
       },
       dark: {
-        // primary: colors.blue.black,
+        primary: '#20B2AA',
       },
     },
   },

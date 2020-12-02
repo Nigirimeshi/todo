@@ -16,6 +16,13 @@
     
     <v-spacer></v-spacer>
     
+    <!-- 切换黑暗主题 -->
+    <v-switch
+      v-model="$vuetify.theme.dark"
+      inset
+      hide-details
+    ></v-switch>
+    
     <!-- 下拉菜单 -->
     <v-menu offset-y>
       <template v-slot:activator="{ on, attrs }">

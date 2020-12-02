@@ -1,6 +1,15 @@
 <template>
   <div class="dashboard">
-    <h1 class="subtitle-1 grey--text">Dashboard</h1>
+    <v-breadcrumbs :items="breadcrumbs" class="pa-0">
+      <template v-slot:item="{ item }">
+        <v-breadcrumbs-item
+          :href="item.href"
+          :disabled="item.disabled" class="grey--text subtitle-1"
+        >
+          {{ item.text }}
+        </v-breadcrumbs-item>
+      </template>
+    </v-breadcrumbs>
     
     <v-container class="my-5">
       <v-row>
@@ -63,16 +72,14 @@
             <div class="caption grey--text">Due by</div>
             <div>{{ project.due }}</div>
           </v-col>
-          <v-col sm="4" md="2">
-            <div class="float-right">
-              <v-chip
-                small
-                :color="chipColor(project.status)"
-                class="caption white--text"
-              >
-                {{ project.status }}
-              </v-chip>
-            </div>
+          <v-col sm="4" md="2" class="d-flex align-center justify-end">
+            <v-chip
+              small
+              :color="chipColor(project.status)"
+              class="caption white--text"
+            >
+              {{ project.status }}
+            </v-chip>
           </v-col>
         </v-row>
         <v-divider></v-divider>
@@ -86,6 +93,15 @@
 import {mapState, mapMutations, mapActions} from "vuex"
 
 export default {
+  data: () => ({
+    breadcrumbs: [
+      {
+        text: 'Dashboard',
+        disabled: true,
+        href: '/',
+      },
+    ],
+  }),
   computed: {
     ...mapState('projects', [
         'projects',
@@ -111,7 +127,7 @@ export default {
       'watcher',
     ]),
   },
-  mounted() {
+  created() {
     // 实时更新数据。
     this.watcher();
   },

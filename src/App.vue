@@ -1,14 +1,11 @@
 <template>
   <v-app :style="{background: $vuetify.theme.themes[theme].background}">
-    <div class="grey lighten-4 fill-height">
-      <Nav/>
-      <v-main>
-        <v-container fluid class="px-4">
-          <router-view></router-view>
-        </v-container>
-      </v-main>
-    </div>
-    
+    <Nav/>
+    <v-main>
+      <v-container fluid class="px-4">
+        <router-view></router-view>
+      </v-container>
+    </v-main>
     <v-footer app></v-footer>
   </v-app>
 </template>
