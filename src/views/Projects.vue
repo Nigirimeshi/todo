@@ -1,5 +1,7 @@
 <template>
-  <div class="projects">
+  <v-container class="px-4">
+    <Nav/>
+    
     <v-breadcrumbs :items="breadcrumbs" class="pa-0">
       <template v-slot:item="{ item }">
         <v-breadcrumbs-item
@@ -27,13 +29,17 @@
       </v-expansion-panels>
     
     </v-container>
-  </div>
+  </v-container>
 </template>
 
 <script>
+import Nav from "@/components/Nav";
 import {mapState, mapGetters} from "vuex"
 
 export default {
+  components: {
+    Nav,
+  },
   data: () => ({
     breadcrumbs: [
       {

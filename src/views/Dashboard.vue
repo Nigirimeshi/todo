@@ -1,5 +1,7 @@
 <template>
-  <div class="dashboard">
+  <v-container class="px-4">
+    <Nav/>
+    
     <v-breadcrumbs :items="breadcrumbs" class="pa-0">
       <template v-slot:item="{ item }">
         <v-breadcrumbs-item
@@ -86,13 +88,17 @@
       </v-card>
     
     </v-container>
-  </div>
+  </v-container>
 </template>
 
 <script>
+import Nav from "@/components/Nav";
 import {mapState, mapMutations, mapActions} from "vuex"
 
 export default {
+  components: {
+    Nav,
+  },
   data: () => ({
     breadcrumbs: [
       {

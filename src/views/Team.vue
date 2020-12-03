@@ -1,5 +1,7 @@
 <template>
-  <div class="team">
+  <v-container class="px-4">
+    <Nav/>
+    
     <v-breadcrumbs :items="breadcrumbs" class="pa-0">
       <template v-slot:item="{ item }">
         <v-breadcrumbs-item
@@ -43,11 +45,16 @@
         </v-col>
       </v-row>
     </v-container>
-  </div>
+  </v-container>
 </template>
 
 <script>
+import Nav from "@/components/Nav";
+
 export default {
+  components: {
+    Nav,
+  },
   data() {
     return {
       breadcrumbs: [
