@@ -2,8 +2,7 @@
   <v-card>
     <Navbar/>
     <NavDrawer/>
-    <!-- 创建新项目后弹出的提示框 -->
-    <Snackbar title="You added a new project."/>
+    <Snackbar/>
   </v-card>
 </template>
 

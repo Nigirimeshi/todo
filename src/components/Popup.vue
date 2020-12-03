@@ -67,9 +67,8 @@
       <v-card-actions class="pb-4">
         <!-- 提交按钮 -->
         <v-btn
-          depressed
           color="primary"
-          class="mx-4"
+          class="mx-2"
           @click="submit"
           :disabled="!valid"
           :loading="loading"
@@ -78,7 +77,6 @@
         </v-btn>
         <!-- 重置表单按钮 -->
         <v-btn
-          depressed
           color="warning"
           class="white--text"
           @click="reset"
@@ -98,19 +96,16 @@ export default {
   data: () => ({
     dialog: false,
     loading: false,
-    
     valid: true,
     title: '',
     titleRules: [
       v => !!v || 'Title is required',
-      // FIXME TypeError: Cannot read property 'length' of undefined
-      v => v.length <= 20 || 'Title must be less than 20 characters',
+      v => (v && v.length <= 20) || 'Title must be less than 20 characters',
     ],
     content: '',
     contentRules: [
       v => !!v || 'Content is reuqired',
-      // FIXME TypeError: Cannot read property 'length' of undefined
-      v => v.length <= 2048 || 'Content must be less than 2048 characters',
+      v => (v && v.length <= 2048) || 'Content must be less than 2048 characters',
     ],
     due: null,
   }),
@@ -138,12 +133,12 @@ export default {
         status: 'ongoing',  // TODO 状态集中定义
       }
       
-      this.addProject({project: project}).then(() => {
-        this.loading = false; // 恢复提交按钮
-        this.dialog = false;  // 关闭模态框
-        this.showSnackbar();  // 触发事件，显示消息条，提示用户已提交完成
-      })
-      
+      this.addProject(project)
+        .then(() => {
+          this.loading = false; // 恢复提交按钮
+          this.dialog = false;  // 关闭模态框
+          this.showSnackbar({text: 'You added a new project.'});  // 触发事件，显示消息条，提示用户已提交完成
+        })
     },
     reset() {
       this.$refs.form.reset()

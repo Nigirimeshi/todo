@@ -1,11 +1,11 @@
 <template>
   <!-- 消息条 -->
   <v-snackbar
-    v-model="snackbar"
+    v-model="snackbarVisibility"
     top
-    timeout="3000"
+    timeout="2000"
   >
-    {{ title }}
+    {{ snackbarText }}
     <template v-slot:action="{ attrs }">
       <v-btn
         v-bind="attrs"
@@ -21,22 +21,22 @@
 import {mapMutations} from "vuex"
 
 export default {
-  // TODO 实现失败，警告，成功通用提示条组件
-  props: ['title'],
-  computed: {
-    snackbar: {
-      get() {
-        return this.$store.state.snackbar;
-      },
-      set(value) {
-        return value;
-      }
-    },
-  },
   methods: {
     ...mapMutations([
       'closeSnackbar',
     ]),
+  },
+  // TODO 实现失败，警告，成功通用提示条组件
+  computed: {
+    snackbarVisibility: {
+      get() {
+        return this.$store.state.snackbar.visibility;
+      },
+      set() {
+        this.closeSnackbar();
+      }
+    },
+    snackbarText() { return this.$store.state.snackbar.text }
   },
 }
 </script>
