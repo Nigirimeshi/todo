@@ -69,7 +69,7 @@ const actions = {
   
   // 新增项目
   // eslint-disable-next-line no-unused-vars
-  addProject({commit}, {project}) {
+  addProject({commit}, project) {
     return new Promise((resolve, reject) => {
       projectsCollection.add(project).then(() => {
         resolve()
