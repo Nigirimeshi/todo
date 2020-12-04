@@ -39,7 +39,7 @@
           <v-card-text>
             <!-- 登录表单 -->
             <v-form
-              ref="form"
+              ref="signupForm"
               v-model="valid"
             >
               
@@ -73,6 +73,9 @@
                 :counter="18"
                 error-count="1"
                 :error-messages="passwordErrorMessages"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                @click:append="showPassword = !showPassword"
               ></v-text-field>
               
               <v-text-field
@@ -82,6 +85,9 @@
                 v-model="passwordConfirmation"
                 :rules="passwordConfirmationRules"
                 :counter="18"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                @click:append="showPassword = !showPassword"
               ></v-text-field>
             
             </v-form>
@@ -138,6 +144,7 @@ export default {
         v => (v && v.length >= 8 && v.length <= 18) || 'Password must be greater than 8 characters and less than 18 characters.',
       ],
       passwordErrorMessages: [],
+      showPassword: false,
       passwordConfirmation: '',
       passwordConfirmationRules: [
         v => !!v || 'Password Confirmation is required.',
@@ -165,9 +172,9 @@ export default {
       
       this.$store.dispatch('auth/signup', signupForm)
         .then(() => {
-          this.emailErrorMessages.length = 0
-          this.usernameErrorMessages.length = 0
-          this.passwordErrorMessages.length = 0
+          this.emailErrorMessages = []
+          this.usernameErrorMessages = []
+          this.passwordErrorMessages = []
           
           this.alert = {
             error: false,
@@ -178,15 +185,21 @@ export default {
           // TODO 跳回之前访问的页面
         })
         .catch(err => {
-          for (let k in err) {
-            if (k === 'email') {
-              this.emailErrorMessages.push.apply(this.emailErrorMessages, err.email)
-            }
-            if (k === 'username') {
-              this.usernameErrorMessages.push.apply(this.usernameErrorMessages, err.username)
-            }
-            if (k === 'password') {
-              this.passwordErrorMessages.push.apply(this.passwordErrorMessages, err.password)
+          if ('email' in err) {
+            this.emailErrorMessages.push.apply(this.emailErrorMessages, err.email)
+          }
+          if ('username' in err) {
+            this.usernameErrorMessages.push.apply(this.usernameErrorMessages, err.username)
+          }
+          if ('password' in err) {
+            this.passwordErrorMessages.push.apply(this.passwordErrorMessages, err.password)
+          }
+          if ('message' in err) {
+            this.alert = {
+              error: true,
+              success: false,
+              text: 'Error! ' + err.message,
+              color: 'error',
             }
           }
         })
@@ -194,6 +207,18 @@ export default {
           this.loading = false
         })
     },
+  },
+  
+  watch: {
+    email() {
+      this.emailErrorMessages = []
+    },
+    username() {
+      this.usernameErrorMessages = []
+    },
+    password() {
+      this.passwordErrorMessages = []
+    }
   },
 }
 </script>

@@ -31,11 +31,16 @@ export default {
       .catch(err => {
         if (err.response) {
           const data = err.response.data
-          if (data.errors) {
-            return APIResponseError(data.errors.error)
+          const errors = data.errors
+          if (errors) {
+            if (errors.error) {
+              return Promise.reject({
+                email: errors.error,
+              })
+            }
           }
         }
-        return Promise.reject(err)
+        return APIResponseError(err.message)
       })
   },
   
@@ -66,13 +71,14 @@ export default {
       .catch(err => {
         if (err.response) {
           const data = err.response.data
-          if (data.errors) {
-            if (data.errors.error) {
-              return APIResponseError(data.errors.error)
+          const errors = data.errors
+          if (errors) {
+            if (errors.error) {
+              return APIResponseError(errors.error)
             }
-            const email = data.errors.email
-            const username = data.errors.username
-            const password = data.errors.password
+            const email = errors.email
+            const username = errors.username
+            const password = errors.password
             return Promise.reject({
               email,
               username,
@@ -80,7 +86,7 @@ export default {
             })
           }
         }
-        return Promise.reject(err)
+        return APIResponseError(err.message)
       })
   },
   

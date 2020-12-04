@@ -39,7 +39,7 @@
           <v-card-text>
             <!-- 登录表单 -->
             <v-form
-              ref="form"
+              ref="loginForm"
               v-model="valid"
             >
               
@@ -49,6 +49,8 @@
                 required
                 v-model="email"
                 :rules="emailRules"
+                error-count="1"
+                :error-messages="emailErrorMessages"
               ></v-text-field>
               
               <v-text-field
@@ -57,6 +59,9 @@
                 required
                 v-model="password"
                 :rules="passwordRules"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                @click:append="showPassword = !showPassword"
               ></v-text-field>
             
             </v-form>
@@ -89,29 +94,33 @@
 
 <script>
 export default {
-  data: () => ({
-    valid: true,
-    loading: false,
-    email: '',
-    emailRules: [
-      v => !!v || 'E-mail is required.',
-      v => {
-        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        return pattern.test(v) || 'E-mail must be valid.'
-      }
-    ],
-    password: '',
-    passwordRules: [
-      v => !!v || 'Password is required.',
-    ],
-    
-    alert: {
-      success: false,
-      error: false,
-      color: '',
-      text: '',
-    },
-  }),
+  data() {
+    return {
+      valid: true,
+      loading: false,
+      email: '',
+      emailRules: [
+        v => !!v || 'E-mail is required.',
+        v => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          return pattern.test(v) || 'E-mail must be valid.'
+        }
+      ],
+      emailErrorMessages: [],
+      password: '',
+      passwordRules: [
+        v => !!v || 'Password is required.',
+      ],
+      showPassword: false,
+      
+      alert: {
+        success: false,
+        error: false,
+        color: '',
+        text: '',
+      },
+    }
+  },
   
   methods: {
     login() {
@@ -124,6 +133,8 @@ export default {
       
       this.$store.dispatch('auth/login', loginForm)
         .then(() => {
+          this.emailErrorMessages = []
+          
           this.alert = {
             error: false,
             success: true,
@@ -133,17 +144,31 @@ export default {
           // TODO 跳回之前访问的页面
         })
         .catch(err => {
-          this.alert = {
-            error: true,
-            success: false,
-            text: 'Error! ' + err.message,
-            color: 'error',
+          if ('email' in err) {
+            this.emailErrorMessages = this.emailErrorMessages.concat(err.email)
+          }
+          if ('message' in err) {
+            this.alert = {
+              error: true,
+              success: false,
+              text: 'Error! ' + err.message,
+              color: 'error',
+            }
           }
         })
         .finally(() => {
           this.loading = false
         })
     },
+  },
+  
+  watch: {
+    email() {
+      this.emailErrorMessages = []
+    },
+    password() {
+      this.emailErrorMessages = []
+    }
   },
 }
 </script>
