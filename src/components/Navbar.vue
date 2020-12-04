@@ -39,8 +39,8 @@
       
       <v-list class="py-0">
         <v-list-item
-          v-for="link in links"
-          :key="link.text"
+          v-for="(link, name) in links"
+          :key="name"
           router
           :to="link.route"
         >

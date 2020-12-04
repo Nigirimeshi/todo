@@ -29,8 +29,8 @@
         color="white"
       >
         <v-list-item
-          v-for="link in links"
-          :key="link.text"
+          v-for="(link, name) in links"
+          :key="name"
           router
           :to="link.route"
         >

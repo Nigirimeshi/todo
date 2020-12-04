@@ -82,6 +82,8 @@
             <v-btn
               color="warning"
               class="mx-2"
+              router
+              :to="links.signup.route"
             >
               Signup
             </v-btn>
@@ -93,6 +95,8 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+
 export default {
   data() {
     return {
@@ -120,6 +124,12 @@ export default {
         text: '',
       },
     }
+  },
+  
+  computed: {
+    ...mapState('links', [
+      'links',
+    ])
   },
   
   methods: {
