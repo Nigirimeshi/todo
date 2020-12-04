@@ -34,12 +34,13 @@
 
 <script>
 import Nav from "@/components/Nav";
-import {mapState, mapGetters} from "vuex"
+import {mapState, mapGetters, mapActions} from "vuex"
 
 export default {
   components: {
     Nav,
   },
+  
   data: () => ({
     breadcrumbs: [
       {
@@ -49,6 +50,7 @@ export default {
       },
     ],
   }),
+  
   computed: {
     ...mapState('profile', [
       'profile',
@@ -56,6 +58,17 @@ export default {
     ...mapGetters('projects', [
       'myProjects'
     ]),
+  },
+  
+  methods: {
+    ...mapActions('projects', [
+      'watcher',
+    ])
+  },
+  
+  created() {
+    // 实时更新数据。
+    this.watcher();
   },
 }
 </script>
