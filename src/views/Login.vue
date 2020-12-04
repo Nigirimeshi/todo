@@ -94,12 +94,15 @@ export default {
     loading: false,
     email: '',
     emailRules: [
-      v => !!v || 'E-mail is required',
-      v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      v => !!v || 'E-mail is required.',
+      v => {
+        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return pattern.test(v) || 'E-mail must be valid.'
+      }
     ],
     password: '',
     passwordRules: [
-      v => !!v || 'Password is required',
+      v => !!v || 'Password is required.',
     ],
     
     alert: {

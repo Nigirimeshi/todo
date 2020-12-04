@@ -4,6 +4,7 @@ import Dashboard from '@/views/Dashboard.vue'
 import Projects from "@/views/Projects";
 import Team from "@/views/Team";
 import Login from "@/views/Login";
+import Signup from "@/views/Signup";
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/signup',
+    name: 'Signup',
+    component: Signup,
   }
 ]
 
