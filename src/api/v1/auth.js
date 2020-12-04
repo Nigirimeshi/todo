@@ -2,7 +2,7 @@ import axios from 'axios'
 import {APIResponseError, APIResponseNotAsExpected} from "@/api";
 
 const LOGIN_URL = 'users/login/'
-const SIGNUP_URL = 'users/signup/'
+const SIGNUP_URL = 'users/'
 
 export default {
   // 发送登录请求
@@ -67,7 +67,17 @@ export default {
         if (err.response) {
           const data = err.response.data
           if (data.errors) {
-            return APIResponseError(data.errors.error)
+            if (data.errors.error) {
+              return APIResponseError(data.errors.error)
+            }
+            const email = data.errors.email
+            const username = data.errors.username
+            const password = data.errors.password
+            return Promise.reject({
+              email,
+              username,
+              password,
+            })
           }
         }
         return Promise.reject(err)
@@ -77,5 +87,9 @@ export default {
   // 设置 axios 默认请求头的认证信息
   setAuthorizationHeader(token) {
     axios.defaults.headers.common['Authorization'] = token
+  },
+  
+  removeAuthorizationHeader() {
+    delete axios.defaults.headers.common['Authorization']
   }
 }
