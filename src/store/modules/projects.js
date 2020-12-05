@@ -4,14 +4,14 @@ import {projectsCollection} from "@/plugins/firebase";
 const state = {
   projects: [
     /*
-    {
-      id,
-      title,
-      content,
-      person,
-      status,
-    }
-    */
+     {
+     id,
+     title,
+     content,
+     person,
+     status,
+     }
+     */
   ],
   watched: false,
 }
@@ -47,24 +47,29 @@ const mutations = {
   
   beginWatching: (state) => {
     state.watched = true;
-  }
+  },
 }
 
 // actions
 const actions = {
   // 实时更新 projects，只允许执行一次
   watcher({commit}) {
-    if (!state.watched) {
-      commit('beginWatching')
-      // TODO 抽象操作数据接口
-      // unsubscribe can be called to stop listening for changes
-      projectsCollection.onSnapshot(ref => {
-        ref.docChanges().forEach(change => {
-          const {newIndex, oldIndex, doc, type} = change
-          commit('changeProject', {newIndex, oldIndex, doc, type})
+    return new Promise((resolve, reject) => {
+      if (!state.watched) {
+        commit('beginWatching')
+        // TODO 抽象操作数据接口
+        // unsubscribe can be called to stop listening for changes
+        projectsCollection.onSnapshot(ref => {
+          ref.docChanges().forEach(change => {
+            const {newIndex, oldIndex, doc, type} = change
+            commit('changeProject', {newIndex, oldIndex, doc, type})
+          })
+          resolve()
+        }, err => {
+          reject(err)
         })
-      })
-    }
+      }
+    })
   },
   
   // 新增项目
@@ -79,6 +84,16 @@ const actions = {
       })
     })
   },
+  
+  // eslint-disable-next-line no-unused-vars
+  removeProjects({commit}, ids) {
+    for (const id of ids) {
+      projectsCollection.doc(id).delete()
+        .catch(err => {
+          console.log(err)
+        });
+    }
+  }
 }
 
 export default {

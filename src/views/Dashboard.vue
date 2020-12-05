@@ -53,39 +53,96 @@
             <span>Sort projects by person</span>
           </v-tooltip>
         </v-col>
+        
+        <!-- 删除按钮 -->
+        <v-col sm="3" md="2" v-if="selected.length >= 1">
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                class="error--text"
+                small
+                depressed
+                v-bind="attrs"
+                v-on="on"
+                @click="removeSelectedProjects"
+              >
+                <v-icon small left>mdi-trash-can-outline</v-icon>
+                <span class="text-lowercase">Delete</span>
+              </v-btn>
+            </template>
+            <span>Delete selected projects</span>
+          </v-tooltip>
+        </v-col>
+        <!-- 编辑按钮 -->
+        <v-col sm="3" md="2" v-if="selected.length == 1">
+          <v-tooltip top>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                small
+                depressed
+                v-bind="attrs"
+                v-on="on"
+              >
+                <v-icon small left>mdi-pencil</v-icon>
+                <span class="text-lowercase">Edit</span>
+              </v-btn>
+            </template>
+            <span>Edit project</span>
+          </v-tooltip>
+        </v-col>
       </v-row>
       
       <!-- 项目列表 -->
-      <v-card
-        flat
-        v-for="project in projects"
-        :key="project.id"
-      >
-        <v-row no-gutters :class="`pa-3 project ${project.status}`">
-          <v-col sm="12" md="6">
-            <div class="caption grey--text">Project title</div>
-            <div>{{ project.title }}</div>
-          </v-col>
-          <v-col sm="4" md="2">
-            <div class="caption grey--text">Person</div>
-            <div>{{ project.person }}</div>
-          </v-col>
-          <v-col sm="4" md="2">
-            <div class="caption grey--text">Due by</div>
-            <div>{{ project.due }}</div>
-          </v-col>
-          <v-col sm="4" md="2" class="d-flex align-center justify-end">
-            <v-chip
-              small
-              :color="chipColor(project.status)"
-              class="caption white--text"
-            >
-              {{ project.status }}
-            </v-chip>
-          </v-col>
-        </v-row>
-        <v-divider></v-divider>
-      </v-card>
+      <v-list dense class="py-0" two-line>
+        <v-list-item-group
+          v-model="selected"
+          active-class="primary--text"
+          multiple
+        >
+          <template v-for="(project, index) in projects">
+            <div :class="`project ${project.status}`" :key="project.id">
+              <v-list-item :value="project.id">
+                <template v-slot:default="{  }">
+                  <v-list-item-content>
+                    <v-row>
+                      <v-col sm="12" md="6">
+                        <div class="caption grey--text">Project title</div>
+                        <div>{{ project.title }}</div>
+                      </v-col>
+                      <v-col sm="4" md="2">
+                        <div class="caption grey--text">Person</div>
+                        <div>{{ project.person }}</div>
+                      </v-col>
+                      <v-col sm="4" md="2">
+                        <div class="caption grey--text">Due by</div>
+                        <div>{{ project.due }}</div>
+                      </v-col>
+                      <v-col sm="4" md="2" class="d-flex align-center justify-end">
+                        <v-chip
+                          small
+                          :color="chipColor(project.status)"
+                          class="caption white--text"
+                        >
+                          {{ project.status }}
+                        </v-chip>
+                      </v-col>
+                    </v-row>
+                    
+                    <!--                  <v-list-item-action>-->
+                    <!--                    <v-list-item-action-text>123</v-list-item-action-text>-->
+                    <!--                  </v-list-item-action>-->
+                  </v-list-item-content>
+                </template>
+              </v-list-item>
+              <v-divider
+                v-if="index < projects.length - 1"
+                :key="index"
+              ></v-divider>
+            </div>
+          
+          </template>
+        </v-list-item-group>
+      </v-list>
     
     </v-container>
   </v-container>
@@ -99,6 +156,7 @@ export default {
   components: {
     Nav,
   },
+  
   data: () => ({
     breadcrumbs: [
       {
@@ -107,13 +165,16 @@ export default {
         href: '/',
       },
     ],
+    selected: [],
   }),
+  
   computed: {
     ...mapState('projects', [
         'projects',
       ]
     ),
   },
+  
   methods: {
     // 根据状态显示颜色。
     chipColor: function (status) {
@@ -131,8 +192,15 @@ export default {
     ]),
     ...mapActions('projects', [
       'watcher',
+      'removeProjects',
     ]),
+    
+    removeSelectedProjects() {
+      this.removeProjects(this.selected)
+      this.selected = []
+    }
   },
+  
   created() {
     // 实时更新数据。
     this.watcher();
