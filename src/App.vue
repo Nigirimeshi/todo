@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import {setInterceptor} from "@/plugins/axios";
+
 export default {
   name: 'App',
   computed: {
@@ -15,5 +17,9 @@ export default {
       return (this.$vuetify.theme.dark) ? 'dark' : 'light'
     }
   },
+  created() {
+    this.$store.dispatch('auth/loadToken')
+    setInterceptor()
+  }
 };
 </script>
