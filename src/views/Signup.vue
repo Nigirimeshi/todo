@@ -192,7 +192,9 @@ export default {
             color: 'success',
             text: 'Success!',
           }
-          // TODO 跳回之前访问的页面
+
+          // 重定向回登陆前访问的页面
+          this.$router.push(this.$route.query.redirect || '/')
         })
         .catch(err => {
           if ('email' in err) {
