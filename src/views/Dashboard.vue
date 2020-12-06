@@ -34,6 +34,7 @@
             <span>Sort projects by project name</span>
           </v-tooltip>
         </v-col>
+        
         <!-- 按人排序 -->
         <v-col sm="3" md="2">
           <v-tooltip top>
@@ -73,22 +74,10 @@
             <span>Delete selected projects</span>
           </v-tooltip>
         </v-col>
+        
         <!-- 编辑按钮 -->
         <v-col sm="3" md="2" v-if="selected.length == 1">
-          <v-tooltip top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                small
-                depressed
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-icon small left>mdi-pencil</v-icon>
-                <span class="text-lowercase">Edit</span>
-              </v-btn>
-            </template>
-            <span>Edit project</span>
-          </v-tooltip>
+          <DialogForEditProject/>
         </v-col>
       </v-row>
       
@@ -98,6 +87,7 @@
           v-model="selected"
           active-class="primary--text"
           multiple
+          @change="selectedChange"
         >
           <template v-for="(project, index) in projects">
             <div :class="`project ${project.status}`" :key="project.id">
@@ -119,7 +109,6 @@
                       </v-col>
                       <v-col sm="4" md="2" class="d-flex align-center justify-end">
                         <v-chip
-                          small
                           :color="chipColor(project.status)"
                           class="caption white--text"
                         >
@@ -127,10 +116,7 @@
                         </v-chip>
                       </v-col>
                     </v-row>
-                    
-                    <!--                  <v-list-item-action>-->
-                    <!--                    <v-list-item-action-text>123</v-list-item-action-text>-->
-                    <!--                  </v-list-item-action>-->
+                  
                   </v-list-item-content>
                 </template>
               </v-list-item>
@@ -150,11 +136,13 @@
 
 <script>
 import Nav from "@/components/Nav";
+import DialogForEditProject from "@/components/DialogForEditProject";
 import {mapState, mapMutations, mapActions} from "vuex"
 
 export default {
   components: {
     Nav,
+    DialogForEditProject,
   },
   
   data: () => ({
@@ -166,6 +154,7 @@ export default {
       },
     ],
     selected: [],
+    dialog: true,
   }),
   
   computed: {
@@ -187,8 +176,10 @@ export default {
           return '#FF6347'
       }
     },
+    
     ...mapMutations('projects', [
       'sortBy',
+      'setSelectedProject',
     ]),
     ...mapActions('projects', [
       'watcher',
@@ -198,7 +189,13 @@ export default {
     removeSelectedProjects() {
       this.removeProjects(this.selected)
       this.selected = []
-    }
+    },
+    
+    selectedChange() {
+      if (this.selected.length === 1) {
+        this.setSelectedProject(this.selected[0])
+      }
+    },
   },
   
   created() {

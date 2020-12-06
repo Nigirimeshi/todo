@@ -14,6 +14,7 @@ const state = {
      */
   ],
   watched: false,
+  selectedProject: {},
 }
 
 // getters
@@ -22,6 +23,14 @@ const getters = {
     return state.projects.filter(project => {
       return project.person === name;
     })
+  },
+  
+  projectStatus: () => {
+    return [
+      'ongoing',
+      'complete',
+      'overdue',
+    ]
   }
 }
 
@@ -48,6 +57,14 @@ const mutations = {
   beginWatching: (state) => {
     state.watched = true;
   },
+  
+  setSelectedProject: (state, id) => {
+    for (let p of state.projects) {
+      if (p.id === id) {
+        state.selectedProject = p
+      }
+    }
+  }
 }
 
 // actions
@@ -66,6 +83,7 @@ const actions = {
           })
           resolve()
         }, err => {
+          console.log(err)
           reject(err)
         })
       }
@@ -87,12 +105,37 @@ const actions = {
   
   // eslint-disable-next-line no-unused-vars
   removeProjects({commit}, ids) {
+    let errors = []
     for (const id of ids) {
-      projectsCollection.doc(id).delete()
+      projectsCollection.doc(id)
+        .delete()
         .catch(err => {
           console.log(err)
+          errors.push(err)
         });
     }
+    if (errors.length > 0) {
+      return Promise.reject({errors, message: errors.length.toString() + ' errors have occurred.'})
+    } else {
+      return Promise.resolve()
+    }
+  },
+  
+  // eslint-disable-next-line no-unused-vars
+  updateProject({commit}, project) {
+    const id = project.id
+    delete project.id
+    return new Promise((resolve, reject) => {
+      projectsCollection.doc(id)
+        .update(project)
+        .then(resp => {
+          resolve(resp)
+        })
+        .catch(err => {
+          console.log(err)
+          reject(err)
+        });
+    })
   }
 }
 

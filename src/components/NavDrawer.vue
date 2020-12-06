@@ -16,8 +16,8 @@
         </v-col>
         
         <v-col cols="auto">
-          <!-- Popup.vue -->
-          <Popup/>
+          <!-- DialogForAddProject.vue -->
+          <DialogForAddProject/>
         </v-col>
       </v-row>
     </v-container>
@@ -47,18 +47,20 @@
 </template>
 
 <script>
-import Popup from "@/components/Popup";
+import DialogForAddProject from "@/components/DialogForAddProject";
 import {mapState} from "vuex"
 
 export default {
+  components: {
+    DialogForAddProject,
+  },
+  
   data() {
     return {
       selectedLink: 0,
     }
   },
-  components: {
-    Popup,
-  },
+  
   computed: {
     drawer: {
       get() {

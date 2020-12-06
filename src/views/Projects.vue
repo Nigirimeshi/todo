@@ -15,7 +15,7 @@
     
     <v-container class="my-5">
       <!-- 拓展面板 -->
-      <v-expansion-panels>
+      <v-expansion-panels multiple>
         <v-expansion-panel
           v-for="project in myProjects(profile.name)"
           :key="project.id"
