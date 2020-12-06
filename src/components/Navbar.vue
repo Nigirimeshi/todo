@@ -49,11 +49,12 @@
       </v-list>
     </v-menu>
     
-    <!-- 注销 -->
+    <!-- 注销按钮 -->
     <v-btn
       depressed
       right
       class="grey--text"
+      @click="logout"
     >
       <span>Logout</span>
       <v-icon right>mdi-exit-to-app</v-icon>
@@ -62,7 +63,7 @@
 </template>
 
 <script>
-import {mapState, mapMutations} from "vuex"
+import {mapState, mapMutations, mapActions} from "vuex"
 
 export default {
   computed: {
@@ -70,9 +71,14 @@ export default {
       'links',
     ]),
   },
+  
   methods: {
     ...mapMutations([
       'switchDrawer',
+    ]),
+    
+    ...mapActions('auth', [
+      'logout',
     ]),
   },
 }
