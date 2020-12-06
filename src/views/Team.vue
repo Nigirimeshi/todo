@@ -31,12 +31,12 @@
             </v-avatar>
             
             <v-card-text>
-              <div class="black--text">{{ person.name }}</div>
+              <div>{{ person.name }}</div>
               <div>{{ person.role }}</div>
             </v-card-text>
             
             <v-card-actions>
-              <v-btn depressed class="grey--text" color="white">
+              <v-btn class="grey--text" depressed>
                 <v-icon small left>mdi-message</v-icon>
                 <span class="text-capitalize">Message</span>
               </v-btn>
