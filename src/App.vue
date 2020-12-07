@@ -1,5 +1,5 @@
 <template>
-  <v-app :style="{background: this.$vuetify.theme.themes[theme].background}">
+  <v-app :style='{ background: this.$vuetify.theme.themes[theme].background }'>
     <v-main>
       <router-view></router-view>
     </v-main>
@@ -8,18 +8,18 @@
 </template>
 
 <script>
-import {setInterceptor} from "@/plugins/axios";
+import { setInterceptor } from '@/plugins/axios';
 
 export default {
   name: 'App',
   computed: {
     theme() {
-      return (this.$vuetify.theme.dark) ? 'dark' : 'light'
+      return this.$vuetify.theme.dark ? 'dark' : 'light';
     }
   },
   created() {
-    this.$store.dispatch('auth/loadToken')
-    setInterceptor()
+    this.$store.dispatch('auth/loadToken');
+    setInterceptor();
   }
 };
 </script>

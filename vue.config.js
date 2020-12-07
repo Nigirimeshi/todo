@@ -1,7 +1,5 @@
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
-  ],
+  transpileDependencies: ['vuetify'],
   devServer: {
     proxy: {
       // TODO 提取配置
@@ -9,9 +7,9 @@ module.exports = {
         target: 'http://127.0.0.1:23333',
         changeOrigin: true,
         pathRewrite: {
-          "^/api/v1": "/api/v1"
+          '^/api/v1': '/api/v1'
         }
-      },
-    },
-  },
-}
+      }
+    }
+  }
+};

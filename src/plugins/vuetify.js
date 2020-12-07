@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
-import colors from 'vuetify/lib/util/colors'
+import colors from 'vuetify/lib/util/colors';
 
 Vue.use(Vuetify);
 
@@ -15,11 +15,11 @@ export default new Vuetify({
         success: '#20B2AA',
         warning: '#FFA500',
         error: '#FF6347',
-        background: colors.grey.lighten4,
+        background: colors.grey.lighten4
       },
       dark: {
-        primary: '#20B2AA',
-      },
-    },
-  },
+        primary: '#20B2AA'
+      }
+    }
+  }
 });

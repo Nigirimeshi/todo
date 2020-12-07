@@ -1,29 +1,29 @@
 /*
  * 组装模块并导出 store
  */
-import Vue from 'vue'
-import Vuex from 'vuex'
-import projects from '@/store/modules/projects'
-import links from "@/store/modules/links";
-import profile from "@/store/modules/profile";
-import auth from "@/store/modules/auth";
+import auth from '@/store/modules/auth';
+import links from '@/store/modules/links';
+import profile from '@/store/modules/profile';
+import projects from '@/store/modules/projects';
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-const debug = process.env.NODE_ENV !== 'production'
+const debug = process.env.NODE_ENV !== 'production';
 
 // global state
 const state = {
   snackbar: {
     visibility: false,
-    text: '',
+    text: ''
   },
-  drawer: true,
-}
+  drawer: true
+};
 
 // global mutations
 const mutations = {
-  showSnackbar: (state, {text}) => {
+  showSnackbar: (state, { text }) => {
     state.snackbar.visibility = true;
     state.snackbar.text = text;
   },
@@ -32,18 +32,18 @@ const mutations = {
     state.snackbar.text = '';
   },
   switchDrawer: (state) => {
-    state.drawer = ! state.drawer;
-  },
-}
+    state.drawer = !state.drawer;
+  }
+};
 
 export default new Vuex.Store({
   modules: {
     projects,
     links,
     profile,
-    auth,
+    auth
   },
   strict: debug,
   state,
-  mutations,
-})
+  mutations
+});

@@ -1,44 +1,40 @@
 <template>
   <!-- 侧边栏导航 -->
-  <v-navigation-drawer
-    app
-    v-model="drawer"
-    color="primary"
-  >
+  <v-navigation-drawer v-model='drawer' app color='primary'>
     <v-container>
-      <v-row justify="center" align="center">
-        <v-col cols="auto">
+      <v-row justify='center' align='center'>
+        <v-col cols='auto'>
           <!-- 头像和名字 -->
-          <v-avatar size="100" class="ma-2">
-            <v-img :src="profile.avatar"></v-img>
+          <v-avatar size='100' class='ma-2'>
+            <v-img :src='profile.avatar'></v-img>
           </v-avatar>
-          <p class="white--text text-center mb-0">{{ profile.name }}</p>
+          <p class='white--text text-center mb-0'>{{ profile.name }}</p>
         </v-col>
-        
+      
         <v-col cols="auto">
           <!-- DialogForAddProject.vue -->
-          <DialogForAddProject/>
+          <DialogForAddProject />
         </v-col>
       </v-row>
     </v-container>
-    
+
     <!-- 菜单项 -->
     <v-list>
-      <v-list-item-group
-        v-model="selectedLink"
-        color="white"
-      >
+      <v-list-item-group v-model='selectedLink' color='white'>
         <v-list-item
-          v-for="(link, name) in links"
-          :key="name"
+          v-for='(link, name) in links'
+          :key='name'
           router
-          :to="link.route"
+          :to='link.route'
         >
           <v-list-item-icon>
-            <v-icon color="white" v-text="link.icon"></v-icon>
+            <v-icon color='white' v-text='link.icon'></v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="white--text" v-text="link.text"></v-list-item-title>
+            <v-list-item-title
+              class='white--text'
+              v-text='link.text'
+            ></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -47,18 +43,18 @@
 </template>
 
 <script>
-import DialogForAddProject from "@/components/DialogForAddProject";
-import {mapState} from "vuex"
+import DialogForAddProject from '@/components/DialogForAddProject';
+import { mapState } from 'vuex';
 
 export default {
   components: {
-    DialogForAddProject,
+    DialogForAddProject
   },
   
   data() {
     return {
-      selectedLink: 0,
-    }
+      selectedLink: 0
+    };
   },
   
   computed: {
@@ -68,14 +64,10 @@ export default {
       },
       set(value) {
         return value;
-      },
+      }
     },
-    ...mapState('links', [
-      'links',
-    ]),
-    ...mapState('profile', [
-      'profile',
-    ]),
-  },
-}
+    ...mapState('links', ['links']),
+    ...mapState('profile', ['profile'])
+  }
+};
 </script>

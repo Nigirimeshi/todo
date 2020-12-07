@@ -1,8 +1,8 @@
-import axios from 'axios'
-import {APIResponseError, APIResponseNotAsExpected} from "@/api";
+import { APIResponseError, APIResponseNotAsExpected } from '@/api';
+import axios from 'axios';
 
-const LOGIN_URL = 'users/login/'
-const SIGNUP_URL = 'users/'
+const LOGIN_URL = 'users/login/';
+const SIGNUP_URL = 'users/';
 
 export default {
   // 发送登录请求
@@ -10,92 +10,94 @@ export default {
     const data = {
       user: {
         email: email,
-        password: password,
+        password: password
       }
-    }
-    return axios.post(LOGIN_URL, data)
-      .then(resp => {
-        const token = resp.data.user.token
-        const username = resp.data.user.username
-        const email = resp.data.user.email
+    };
+    return axios
+      .post(LOGIN_URL, data)
+      .then((resp) => {
+        const token = resp.data.user.token;
+        const username = resp.data.user.username;
+        const email = resp.data.user.email;
         if (token && username && email) {
           return Promise.resolve({
             token,
             username,
-            email,
-          })
+            email
+          });
         } else {
-          return APIResponseNotAsExpected(LOGIN_URL)
+          return APIResponseNotAsExpected(LOGIN_URL);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         if (err.response) {
-          const data = err.response.data
-          const errors = data.errors
+          const data = err.response.data;
+          const errors = data.errors;
           if (errors) {
             if (errors.error) {
               return Promise.reject({
-                email: errors.error,
-              })
+                email: errors.error
+              });
             }
           }
         }
-        return APIResponseError(err.message)
-      })
+        return APIResponseError(err.message);
+      });
   },
-  
+
   // 发送注册请求
   signup(email, username, password) {
     const data = {
       user: {
         email: email,
         username: username,
-        password: password,
+        password: password
       }
-    }
-    return axios.post(SIGNUP_URL, data)
-      .then(resp => {
-        const token = resp.data.user.token
-        const username = resp.data.user.username
-        const email = resp.data.user.email
+    };
+    return axios
+      .post(SIGNUP_URL, data)
+      .then((resp) => {
+        const token = resp.data.user.token;
+        const username = resp.data.user.username;
+        const email = resp.data.user.email;
         if (token && username && email) {
           return Promise.resolve({
             token,
             username,
-            email,
-          })
+            email
+          });
         } else {
-          return APIResponseNotAsExpected(SIGNUP_URL)
+          return APIResponseNotAsExpected(SIGNUP_URL);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         if (err.response) {
-          const data = err.response.data
-          const errors = data.errors
+          const data = err.response.data;
+          const errors = data.errors;
           if (errors) {
             if (errors.error) {
-              return APIResponseError(errors.error)
+              return APIResponseError(errors.error);
             }
-            const email = errors.email
-            const username = errors.username
-            const password = errors.password
+            const email = errors.email;
+            const username = errors.username;
+            const password = errors.password;
             return Promise.reject({
               email,
               username,
-              password,
-            })
+              password
+            });
           }
         }
-        return APIResponseError(err.message)
-      })
+        return APIResponseError(err.message);
+      });
   },
   
   // 设置 axios 默认请求头的认证信息
   setAuthorizationHeader(token) {
-    axios.defaults.headers.common['Authorization'] = token
+    axios.defaults.headers.common['Authorization'] = token;
   },
   
   removeAuthorizationHeader() {
-    delete axios.defaults.headers.common['Authorization']
+    delete axios.defaults.headers.common['Authorization'];
   }
-}
+};

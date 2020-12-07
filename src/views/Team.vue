@@ -1,40 +1,40 @@
 <template>
-  <v-container class="px-4">
-    <Nav/>
-    
-    <v-breadcrumbs :items="breadcrumbs" class="pa-0">
-      <template v-slot:item="{ item }">
+  <v-container class='px-4'>
+    <Nav />
+  
+    <v-breadcrumbs :items='breadcrumbs' class='pa-0'>
+      <template #item='{ item }'>
         <v-breadcrumbs-item
-          :href="item.href"
-          :disabled="item.disabled" class="grey--text subtitle-1"
+          :href='item.href'
+          :disabled='item.disabled'
+          class='grey--text subtitle-1'
         >
           {{ item.text }}
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-    
+
     <v-container class="my-5">
       <!-- 成员介绍卡片 -->
       <v-row>
         <v-col
-          sm="6" md="4" lg="3" xl="2"
-          v-for="person in team"
-          :key="person.name"
+          lg='3'
+          md='4'
+          sm='6'
+          xl='2'
+          v-for='person in team'
+          :key='person.name'
         >
-          <v-card flat class="text-center pt-4">
-            <v-avatar
-              size="100"
-              rounded="circle"
-              class="grey lighten-2"
-            >
-              <v-img :src="person.avatar"></v-img>
+          <v-card flat class='text-center pt-4'>
+            <v-avatar class='grey lighten-2' rounded='circle' size='100'>
+              <v-img :src='person.avatar'></v-img>
             </v-avatar>
-            
+      
             <v-card-text>
               <div>{{ person.name }}</div>
               <div>{{ person.role }}</div>
             </v-card-text>
-            
+
             <v-card-actions>
               <v-btn class="grey--text" depressed>
                 <v-icon small left>mdi-message</v-icon>
@@ -49,11 +49,11 @@
 </template>
 
 <script>
-import Nav from "@/components/Nav";
+import Nav from '@/components/Nav';
 
 export default {
   components: {
-    Nav,
+    Nav
   },
   data() {
     return {
@@ -61,16 +61,16 @@ export default {
         {
           text: 'Team',
           disabled: true,
-          href: '/team',
-        },
+          href: '/team'
+        }
       ],
       team: [
-        {name: 'Tom', role: 'Web developer', avatar: '/avatar01.jpg'},
-        {name: 'Jack', role: 'Graphic designer', avatar: '/avatar02.jpg'},
-        {name: 'Yang', role: 'Web developer', avatar: '/avatar03.jpg'},
-        {name: 'Rick', role: 'Social media maverick', avatar: '/avatar04.jpg'},
-      ],
-    }
-  },
-}
+        { name: 'Tom', role: 'Web developer', avatar: '/avatar01.jpg' },
+        { name: 'Jack', role: 'Graphic designer', avatar: '/avatar02.jpg' },
+        { name: 'Yang', role: 'Web developer', avatar: '/avatar03.jpg' },
+        { name: 'Rick', role: 'Social media maverick', avatar: '/avatar04.jpg' }
+      ]
+    };
+  }
+};
 </script>

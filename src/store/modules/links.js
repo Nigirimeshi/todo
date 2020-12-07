@@ -3,32 +3,32 @@ const state = {
     dashboard: {
       text: 'Dashboard',
       icon: 'mdi-view-dashboard',
-      route: '/',
+      route: '/'
     },
     folder: {
       text: 'Folder',
       icon: 'mdi-folder',
-      route: '/projects',
+      route: '/projects'
     },
     person: {
       text: 'Person',
       icon: 'mdi-account',
-      route: '/team',
+      route: '/team'
     },
     login: {
       text: 'Login',
       icon: 'mdi-login-variant',
-      route: '/login',
+      route: '/login'
     },
     signup: {
       text: 'Signup',
       icon: 'mdi-account-plus',
-      route: '/signup',
-    },
-  },
-}
+      route: '/signup'
+    }
+  }
+};
 
 export default {
   namespaced: true,
-  state,
-}
+  state
+};
