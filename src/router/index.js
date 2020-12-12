@@ -1,9 +1,4 @@
 import store from '@/store';
-import Dashboard from '@/views/Dashboard.vue';
-import Login from '@/views/Login';
-import Projects from '@/views/Projects';
-import Signup from '@/views/Signup';
-import Team from '@/views/Team';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
@@ -11,12 +6,12 @@ const routes = [
   {
     path: '/',
     name: 'Dashboard',
-    component: Dashboard
+    component: () => import('@/views/Dashboard.vue')
   },
   {
     path: '/projects',
     name: 'Projects',
-    component: Projects,
+    component: () => import('@/views/Projects'),
     meta: {
       requiresAuth: true
     }
@@ -24,17 +19,17 @@ const routes = [
   {
     path: '/team',
     name: 'Team',
-    component: Team
+    component: () => import('@/views/Team')
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: () => import('@/views/Login')
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
+    component: () => import('@/views/Signup')
   }
 ];
 
