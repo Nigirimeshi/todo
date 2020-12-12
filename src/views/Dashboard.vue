@@ -5,15 +5,15 @@
     <v-breadcrumbs :items='breadcrumbs' class='pa-0'>
       <template #item='{ item }'>
         <v-breadcrumbs-item
-          :href='item.href'
           :disabled='item.disabled'
+          :href='item.href'
           class='grey--text subtitle-1'
         >
           {{ item.text }}
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-
+  
     <v-container class="my-5">
       <v-row>
         <!-- 按标题排序 -->
@@ -23,10 +23,10 @@
               <v-btn
                 small
                 depressed
-                class='grey--text'
-                @click="sortBy({ prop: 'title' })"
                 v-bind='attrs'
+                @click="sortBy({ prop: 'title' })"
                 v-on='on'
+                class='grey--text'
               >
                 <v-icon left small> mdi-folder</v-icon>
                 <span class='text-lowercase'>By project</span>
@@ -43,10 +43,10 @@
               <v-btn
                 small
                 depressed
-                class='grey--text'
-                @click="sortBy({ prop: 'person' })"
                 v-bind='attrs'
+                @click="sortBy({ prop: 'person' })"
                 v-on='on'
+                class='grey--text'
               >
                 <v-icon left small> mdi-account</v-icon>
                 <span class='text-lowercase'>By person</span>
@@ -61,11 +61,11 @@
           <v-tooltip top>
             <template #activator='{ on, attrs }'>
               <v-btn
-                class='error--text'
+                v-bind='attrs'
                 small
                 depressed
-                v-bind='attrs'
                 v-on='on'
+                class='error--text'
                 @click='removeSelectedProjects'
               >
                 <v-icon left small> mdi-trash-can-outline</v-icon>
@@ -75,7 +75,7 @@
             <span>Delete selected projects</span>
           </v-tooltip>
         </v-col>
-  
+
         <!-- 编辑按钮 -->
         <v-col v-if='selected.length === 1' md='2' sm='3'>
           <DialogForEditProject />
@@ -96,15 +96,15 @@
                 <template #default='{}'>
                   <v-list-item-content>
                     <v-row>
-                      <v-col sm='12' md='6'>
+                      <v-col md='6' sm='12'>
                         <div class='caption grey--text'>Project title</div>
                         <div>{{ project.title }}</div>
                       </v-col>
-                      <v-col sm='4' md='2'>
+                      <v-col md='2' sm='4'>
                         <div class='caption grey--text'>Person</div>
                         <div>{{ project.person }}</div>
                       </v-col>
-                      <v-col sm='4' md='2'>
+                      <v-col md='2' sm='4'>
                         <div class='caption grey--text'>Due by</div>
                         <div>{{ project.due }}</div>
                       </v-col>

@@ -11,7 +11,7 @@
           :color='alert.color'
           class='mx-auto'
           max-width='600px'
-          icon="mdi-check"
+          icon='mdi-check'
         >
           {{ alert.text }}
         </v-alert>
@@ -22,8 +22,8 @@
           dark
           :color='alert.color'
           class='mx-auto'
-          max-width='600px'
           icon='mdi-alert-circle'
+          max-width='600px'
         >
           {{ alert.text }}
         </v-alert>
@@ -34,13 +34,13 @@
             <!-- 登录表单 -->
             <v-form ref='loginForm' v-model='valid'>
               <v-text-field
-                label='E-mail'
-                prepend-icon='mdi-email'
-                required
                 v-model='email'
+                :error-messages='emailErrorMessages'
+                required
                 :rules='emailRules'
                 error-count='1'
-                :error-messages='emailErrorMessages'
+                label='E-mail'
+                prepend-icon='mdi-email'
               ></v-text-field>
           
               <v-text-field
@@ -60,10 +60,10 @@
             <!-- 登录按钮 -->
             <v-btn
               :disabled='!valid'
-              color='success'
-              class='mx-2'
-              @click='login'
               :loading='loading'
+              class='mx-2'
+              color='success'
+              @click='login'
             >
               Login
             </v-btn>
@@ -98,7 +98,7 @@ export default {
       password: '',
       passwordRules: [(v) => !!v || 'Password is required.'],
       showPassword: false,
-  
+
       alert: {
         success: false,
         error: false,

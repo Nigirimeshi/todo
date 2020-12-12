@@ -32,9 +32,8 @@
           router
           :to='link.route'
         >
-          <v-list-item-title class='grey--text'>{{
-              link.text
-            }}
+          <v-list-item-title class='grey--text'
+          >{{ link.text }}
           </v-list-item-title>
         </v-list-item>
       </v-list>

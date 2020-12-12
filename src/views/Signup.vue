@@ -11,7 +11,7 @@
           :color='alert.color'
           class='mx-auto'
           max-width='600px'
-          icon="mdi-check"
+          icon='mdi-check'
         >
           {{ alert.text }}
         </v-alert>
@@ -22,8 +22,8 @@
           dark
           :color='alert.color'
           class='mx-auto'
-          max-width='600px'
           icon='mdi-alert-circle'
+          max-width='600px'
         >
           {{ alert.text }}
         </v-alert>
@@ -34,13 +34,13 @@
             <!-- 注册表单 -->
             <v-form ref='signupForm' v-model='valid'>
               <v-text-field
-                label='E-mail'
-                prepend-icon='mdi-email'
-                required
                 v-model='email'
+                :error-messages='emailErrorMessages'
+                required
                 :rules='emailRules'
                 error-count='1'
-                :error-messages='emailErrorMessages'
+                label='E-mail'
+                prepend-icon='mdi-email'
               ></v-text-field>
           
               <v-text-field
@@ -72,12 +72,12 @@
                 label="Password Confirmation"
                 prepend-icon="mdi-lock"
                 required
-                v-model="passwordConfirmation"
-                :rules="passwordConfirmationRules"
-                :counter="18"
+                v-model='passwordConfirmation'
+                :rules='passwordConfirmationRules'
+                :counter='18'
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
-                @click:append="showPassword = !showPassword"
+                @click:append='showPassword = !showPassword'
               ></v-text-field>
             </v-form>
           </v-card-text>
@@ -85,10 +85,10 @@
           <v-card-actions class='pb-4'>
             <v-btn
               :disabled='!valid'
-              color='success'
-              class='mx-2'
-              @click='signup'
               :loading='loading'
+              class='mx-2'
+              color='success'
+              @click='signup'
             >
               Signup
             </v-btn>
@@ -172,14 +172,14 @@ export default {
           this.emailErrorMessages = [];
           this.usernameErrorMessages = [];
           this.passwordErrorMessages = [];
-      
+  
           this.alert = {
             error: false,
             success: true,
             color: 'success',
             text: 'Success!'
           };
-      
+  
           // 重定向回登陆前访问的页面
           this.$router.push(this.$route.query.redirect || '/');
         })

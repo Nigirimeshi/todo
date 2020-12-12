@@ -2,16 +2,16 @@
   <!-- 侧边栏导航 -->
   <v-navigation-drawer v-model='drawer' app color='primary'>
     <v-container>
-      <v-row justify='center' align='center'>
+      <v-row align='center' justify='center'>
         <v-col cols='auto'>
           <!-- 头像和名字 -->
-          <v-avatar size='100' class='ma-2'>
+          <v-avatar class='ma-2' size='100'>
             <v-img :src='profile.avatar'></v-img>
           </v-avatar>
           <p class='white--text text-center mb-0'>{{ profile.name }}</p>
         </v-col>
       
-        <v-col cols="auto">
+        <v-col cols='auto'>
           <!-- DialogForAddProject.vue -->
           <DialogForAddProject />
         </v-col>

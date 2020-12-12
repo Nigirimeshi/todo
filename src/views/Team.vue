@@ -5,27 +5,27 @@
     <v-breadcrumbs :items='breadcrumbs' class='pa-0'>
       <template #item='{ item }'>
         <v-breadcrumbs-item
-          :href='item.href'
           :disabled='item.disabled'
+          :href='item.href'
           class='grey--text subtitle-1'
         >
           {{ item.text }}
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-
+  
     <v-container class="my-5">
       <!-- 成员介绍卡片 -->
       <v-row>
         <v-col
+          v-for='person in team'
+          :key='person.name'
           lg='3'
           md='4'
           sm='6'
           xl='2'
-          v-for='person in team'
-          :key='person.name'
         >
-          <v-card flat class='text-center pt-4'>
+          <v-card class='text-center pt-4' flat>
             <v-avatar class='grey lighten-2' rounded='circle' size='100'>
               <v-img :src='person.avatar'></v-img>
             </v-avatar>
@@ -34,9 +34,9 @@
               <div>{{ person.name }}</div>
               <div>{{ person.role }}</div>
             </v-card-text>
-
+      
             <v-card-actions>
-              <v-btn class="grey--text" depressed>
+              <v-btn class='grey--text' depressed>
                 <v-icon small left>mdi-message</v-icon>
                 <span class="text-capitalize">Message</span>
               </v-btn>

@@ -5,15 +5,15 @@
     <v-breadcrumbs :items='breadcrumbs' class='pa-0'>
       <template #item='{ item }'>
         <v-breadcrumbs-item
-          :href='item.href'
           :disabled='item.disabled'
+          :href='item.href'
           class='grey--text subtitle-1'
         >
           {{ item.text }}
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-
+  
     <v-container class="my-5">
       <!-- 拓展面板 -->
       <v-expansion-panels multiple>
@@ -21,9 +21,8 @@
           v-for='project in myProjects(profile.name)'
           :key='project.id'
         >
-          <v-expansion-panel-header>{{
-              project.title
-            }}
+          <v-expansion-panel-header
+          >{{ project.title }}
           </v-expansion-panel-header>
     
           <v-expansion-panel-content>

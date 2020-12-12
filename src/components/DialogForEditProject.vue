@@ -25,34 +25,34 @@
           <v-form ref='form' v-model='valid'>
             <!-- 标题输入框 -->
             <v-text-field
+              :counter='40'
               label='Title'
               prepend-icon='mdi-folder'
-              :counter='40'
               required
-              v-model="title"
-              :rules="titleRules"
+              v-model='title'
+              :rules='titleRules'
             ></v-text-field>
-
+          
             <!-- 内容输入框 -->
             <v-textarea
+              v-model='content'
+              :counter='2048'
+              required
+              :rules='contentRules'
               label='Content'
               prepend-icon='mdi-pencil'
-              required
-              v-model='content'
-              :rules='contentRules'
-              :counter='2048'
             ></v-textarea>
           
             <!-- 日期选择框 -->
             <v-menu min-width='290px' offset-y>
               <template #activator='{ on, attrs }'>
                 <v-text-field
-                  label='Due date'
-                  prepend-icon='mdi-calendar-range'
-                  readonly
                   v-model='due'
                   v-bind='attrs'
+                  readonly
                   v-on='on'
+                  label='Due date'
+                  prepend-icon='mdi-calendar-range'
                 ></v-text-field>
               </template>
               <v-date-picker v-model='due'></v-date-picker>
