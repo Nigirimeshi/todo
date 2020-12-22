@@ -1,8 +1,8 @@
 import { APIResponseError, APIResponseNotAsExpected } from '@/api';
 import axios from 'axios';
 
-const LOGIN_URL = 'users/login/';
-const SIGNUP_URL = 'users/';
+const LOGIN_URL = process.env.VUE_APP_API_V1_LOGIN;
+const SIGNUP_URL = process.env.VUE_APP_API_V1_SIGNUP;
 
 export default {
   // 发送登录请求
@@ -91,12 +91,12 @@ export default {
         return APIResponseError(err.message);
       });
   },
-  
+
   // 设置 axios 默认请求头的认证信息
   setAuthorizationHeader(token) {
     axios.defaults.headers.common['Authorization'] = token;
   },
-  
+
   removeAuthorizationHeader() {
     delete axios.defaults.headers.common['Authorization'];
   }
