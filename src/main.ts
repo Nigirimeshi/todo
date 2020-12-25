@@ -10,8 +10,8 @@ Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;
 
 new Vue({
-  router,
   vuetify,
+  router,
   store,
   render: (h) => h(App)
 }).$mount('#app');

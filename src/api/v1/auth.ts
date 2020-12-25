@@ -6,7 +6,7 @@ const SIGNUP_URL = process.env.VUE_APP_API_V1_SIGNUP;
 
 export default {
   // 发送登录请求
-  login(email, password) {
+  login(email: string, password: string) {
     const data = {
       user: {
         email: email,
@@ -46,7 +46,7 @@ export default {
   },
 
   // 发送注册请求
-  signup(email, username, password) {
+  signup(email: string, username: string, password: string) {
     const data = {
       user: {
         email: email,
@@ -93,11 +93,11 @@ export default {
   },
 
   // 设置 axios 默认请求头的认证信息
-  setAuthorizationHeader(token) {
+  setAuthorizationHeader(token: string): void {
     axios.defaults.headers.common['Authorization'] = token;
   },
 
-  removeAuthorizationHeader() {
+  removeAuthorizationHeader(): void {
     delete axios.defaults.headers.common['Authorization'];
   }
 };

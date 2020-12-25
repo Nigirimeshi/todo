@@ -11,52 +11,52 @@
     </v-btn>
 
     <!-- 新建项目对话框 -->
-    <v-dialog v-model='dialog' max-width='600px'>
+    <v-dialog v-model="dialog" max-width="600px">
       <!-- 对话框内容 -->
       <v-card>
-        <v-card-title class='grey--text'>Add a new project</v-card-title>
+        <v-card-title class="grey--text">Add a new project</v-card-title>
         <v-card-text>
-          <v-form ref='form' v-model='valid'>
+          <v-form ref="form" v-model="valid">
             <!-- 标题输入框 -->
             <v-text-field
-              :counter='40'
-              label='Title'
-              prepend-icon='mdi-folder'
+              :counter="40"
+              label="Title"
+              prepend-icon="mdi-folder"
               required
-              v-model='title'
-              :rules='titleRules'
+              v-model="title"
+              :rules="titleRules"
             ></v-text-field>
-        
+
             <!-- 内容输入框 -->
             <v-textarea
-              v-model='content'
-              :counter='2048'
+              v-model="content"
+              :counter="2048"
               required
-              :rules='contentRules'
-              label='Content'
-              prepend-icon='mdi-pencil'
+              :rules="contentRules"
+              label="Content"
+              prepend-icon="mdi-pencil"
             ></v-textarea>
-        
+
             <!-- 日期选择框 -->
-            <v-menu min-width='290px' offset-y>
-              <template #activator='{ on, attrs }'>
+            <v-menu min-width="290px" offset-y>
+              <template #activator="{ on, attrs }">
                 <v-text-field
-                  v-model='due'
-                  v-bind='attrs'
+                  v-model="due"
+                  v-bind="attrs"
                   readonly
-                  v-on='on'
-                  label='Due date'
-                  prepend-icon='mdi-calendar-range'
+                  v-on="on"
+                  label="Due date"
+                  prepend-icon="mdi-calendar-range"
                 ></v-text-field>
               </template>
-              <v-date-picker v-model='due'></v-date-picker>
+              <v-date-picker v-model="due"></v-date-picker>
             </v-menu>
 
             <!-- 状态单选框 -->
             <v-select
               label="Status"
               prepend-icon="mdi-progress-check"
-              :items="projectStatus"
+              :items="getAllStates"
               required
               v-model="status"
               :rules="statusRules"
@@ -76,7 +76,7 @@
               </v-btn>
 
               <!-- 重置表单按钮 -->
-              <v-btn class='white--text' color='warning' @click='reset'>
+              <v-btn class="white--text" color="warning" @click="reset">
                 Reset
               </v-btn>
             </div>
@@ -87,73 +87,83 @@
   </div>
 </template>
 
-<script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 
-export default {
-  data() {
-    return {
-      dialog: false,
-      loading: false,
-      valid: true,
-      title: '',
-      titleRules: [
-        (v) => !!v || 'Title is required',
-        (v) => (v && v.length <= 40) || 'Title must be less than 40 characters.'
-      ],
-      content: '',
-      contentRules: [
-        (v) => !!v || 'Content is required',
-        (v) =>
-          (v && v.length <= 2048) ||
-          'Content must be less than 2048 characters.'
-      ],
-      due: null,
-      status: 'ongoing',
-      statusRules: [
-        (v) => !!v || 'Status is required',
-        (v) => this.projectStatus.indexOf(v) !== -1 || 'Status invalid.'
-      ]
+import { Project } from '@/store/modules/projects';
+
+const snackbar = namespace('snackbar');
+const profile = namespace('profile');
+const projects = namespace('projects');
+
+@Component
+export default class DialogForAddProject extends Vue {
+  dialog = false;
+  loading = false;
+  valid = true;
+  title = '';
+  titleRules = [
+    (v: string): string | boolean => !!v || 'Title is required',
+    (v: string): string | boolean =>
+      (v && v.length <= 40) || 'Title must be less than 40 characters.'
+  ];
+  content = '';
+  contentRules = [
+    (v: string): string | boolean => !!v || 'Content is required',
+    (v: string): string | boolean =>
+      (v && v.length <= 2048) || 'Content must be less than 2048 characters.'
+  ];
+  due = null;
+  status = 'ongoing';
+  statusRules = [
+    (v: string): string | boolean => !!v || 'Status is required',
+    (v: string): string | boolean =>
+      this.getAllStates().indexOf(v) !== -1 || 'Status invalid.'
+  ];
+
+  @profile.State
+  name!: string;
+
+  @snackbar.Mutation
+  showSnackbar!: (text: string) => void;
+
+  @snackbar.Mutation
+  closeSnackbar!: () => void;
+
+  @projects.Action
+  addProject!: (project: Project) => Promise<unknown>;
+
+  @projects.Getter
+  getAllStates!: () => string[];
+
+  submit(): void {
+    // 提交时按钮变成加载中。
+    this.loading = true;
+
+    const project = {
+      title: this.title,
+      content: this.content,
+      due: this.due,
+      person: this.name,
+      status: this.status
     };
-  },
-  
-  computed: {
-    ...mapState('profile', ['profile']),
-    ...mapGetters('projects', ['projectStatus'])
-  },
-  
-  methods: {
-    ...mapMutations(['showSnackbar']),
-    ...mapActions('projects', ['addProject']),
-    
-    submit() {
-      // 提交时按钮变成加载中。
-      this.loading = true;
-      
-      const project = {
-        title: this.title,
-        content: this.content,
-        due: this.due,
-        person: this.profile.name,
-        status: this.status
-      };
-      
-      this.addProject(project)
-        .then(() => {
-          this.loading = false; // 恢复提交按钮
-          this.dialog = false; // 关闭模态框
-          this.showSnackbar({ text: 'You have added a new project.' }); // 触发事件，显示消息条，提示用户已提交完成
-        })
-        .catch((err) => {
-          this.loading = false;
-          this.dialog = false;
-          this.showSnackbar({ text: err.message });
-        });
-    },
-    
-    reset() {
-      this.$refs.form.reset();
-    }
+
+    this.addProject(project)
+      .then(() => {
+        this.loading = false;
+        this.dialog = false;
+        this.showSnackbar('You have added a new project.');
+      })
+      .catch((err: { message: string }) => {
+        this.loading = false;
+        this.dialog = false;
+        this.showSnackbar(err.message);
+      });
   }
-};
+
+  reset(): void {
+    (this.$refs.form as Vue & { reset: () => boolean }).reset();
+  }
+}
 </script>

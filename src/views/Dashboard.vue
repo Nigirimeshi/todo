@@ -1,35 +1,35 @@
 <template>
-  <v-container class='px-4'>
+  <v-container class="px-4">
     <Nav />
-  
-    <v-breadcrumbs :items='breadcrumbs' class='pa-0'>
-      <template #item='{ item }'>
+
+    <v-breadcrumbs :items="breadcrumbs" class="pa-0">
+      <template #item="{ item }">
         <v-breadcrumbs-item
-          :disabled='item.disabled'
-          :href='item.href'
-          class='grey--text subtitle-1'
+          :disabled="item.disabled"
+          :href="item.href"
+          class="grey--text subtitle-1"
         >
           {{ item.text }}
         </v-breadcrumbs-item>
       </template>
     </v-breadcrumbs>
-  
+
     <v-container class="my-5">
       <v-row>
         <!-- 按标题排序 -->
         <v-col sm="3" md="2">
           <v-tooltip top>
-            <template #activator='{ on, attrs }'>
+            <template #activator="{ on, attrs }">
               <v-btn
                 small
                 depressed
-                v-bind='attrs'
-                @click="sortBy({ prop: 'title' })"
-                v-on='on'
-                class='grey--text'
+                v-bind="attrs"
+                @click="sortBy('title')"
+                v-on="on"
+                class="grey--text"
               >
                 <v-icon left small> mdi-folder</v-icon>
-                <span class='text-lowercase'>By project</span>
+                <span class="text-lowercase">By project</span>
               </v-btn>
             </template>
             <span>Sort projects by project name</span>
@@ -39,17 +39,17 @@
         <!-- 按人排序 -->
         <v-col sm="3" md="2">
           <v-tooltip top>
-            <template #activator='{ on, attrs }'>
+            <template #activator="{ on, attrs }">
               <v-btn
                 small
                 depressed
-                v-bind='attrs'
-                @click="sortBy({ prop: 'person' })"
-                v-on='on'
-                class='grey--text'
+                v-bind="attrs"
+                @click="sortBy('person')"
+                v-on="on"
+                class="grey--text"
               >
                 <v-icon left small> mdi-account</v-icon>
-                <span class='text-lowercase'>By person</span>
+                <span class="text-lowercase">By person</span>
               </v-btn>
             </template>
             <span>Sort projects by person</span>
@@ -59,17 +59,17 @@
         <!-- 删除按钮 -->
         <v-col sm="3" md="2" v-if="selected.length >= 1">
           <v-tooltip top>
-            <template #activator='{ on, attrs }'>
+            <template #activator="{ on, attrs }">
               <v-btn
-                v-bind='attrs'
+                v-bind="attrs"
                 small
                 depressed
-                v-on='on'
-                class='error--text'
-                @click='removeSelectedProjects'
+                v-on="on"
+                class="error--text"
+                @click="removeSelectedProjects"
               >
                 <v-icon left small> mdi-trash-can-outline</v-icon>
-                <span class='text-lowercase'>Delete</span>
+                <span class="text-lowercase">Delete</span>
               </v-btn>
             </template>
             <span>Delete selected projects</span>
@@ -77,7 +77,7 @@
         </v-col>
 
         <!-- 编辑按钮 -->
-        <v-col v-if='selected.length === 1' md='2' sm='3'>
+        <v-col v-if="selected.length === 1" md="2" sm="3">
           <DialogForEditProject />
         </v-col>
       </v-row>
@@ -93,29 +93,29 @@
           <template v-for="(project, index) in projects">
             <div :class="`project ${project.status}`" :key="project.id">
               <v-list-item :value="project.id">
-                <template #default='{}'>
+                <template #default="{}">
                   <v-list-item-content>
                     <v-row>
-                      <v-col md='6' sm='12'>
-                        <div class='caption grey--text'>Project title</div>
+                      <v-col md="6" sm="12">
+                        <div class="caption grey--text">Project title</div>
                         <div>{{ project.title }}</div>
                       </v-col>
-                      <v-col md='2' sm='4'>
-                        <div class='caption grey--text'>Person</div>
+                      <v-col md="2" sm="4">
+                        <div class="caption grey--text">Person</div>
                         <div>{{ project.person }}</div>
                       </v-col>
-                      <v-col md='2' sm='4'>
-                        <div class='caption grey--text'>Due by</div>
+                      <v-col md="2" sm="4">
+                        <div class="caption grey--text">Due by</div>
                         <div>{{ project.due }}</div>
                       </v-col>
                       <v-col
-                        class='d-flex align-center justify-end'
-                        md='2'
-                        sm='4'
+                        class="d-flex align-center justify-end"
+                        md="2"
+                        sm="4"
                       >
                         <v-chip
-                          :color='chipColor(project.status)'
-                          class='caption white--text'
+                          :color="chipColor(project.status)"
+                          class="caption white--text"
                         >
                           {{ project.status }}
                         </v-chip>
@@ -124,8 +124,8 @@
                   </v-list-item-content>
                 </template>
               </v-list-item>
-  
-              <v-divider v-if='index < projects.length - 1' :key='index' />
+
+              <v-divider v-if="index < projects.length - 1" :key="index" />
             </div>
           </template>
         </v-list-item-group>
@@ -134,66 +134,80 @@
   </v-container>
 </template>
 
-<script>
-import DialogForEditProject from '@/components/DialogForEditProject';
-import Nav from '@/components/Nav';
-import { mapActions, mapMutations, mapState } from 'vuex';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import { namespace } from 'vuex-class';
 
-export default {
+import { Project } from '@/store/modules/projects';
+
+import DialogForEditProject from '@/components/DialogForEditProject.vue';
+import Nav from '@/components/Nav.vue';
+
+const projects = namespace('projects');
+
+@Component({
   components: {
     Nav,
     DialogForEditProject
-  },
-  
-  data: () => ({
-    breadcrumbs: [
-      {
-        text: 'Dashboard',
-        disabled: true,
-        href: '/'
-      }
-    ],
-    selected: [],
-    dialog: true
-  }),
-  
-  computed: {
-    ...mapState('projects', ['projects'])
-  },
-  
-  methods: {
-    // 根据状态显示颜色。
-    chipColor: function(status) {
-      switch (status) {
-        case 'complete':
-          return '#20B2AA';
-        case 'ongoing':
-          return '#FFA500';
-        case 'overdue':
-          return '#FF6347';
-      }
-    },
-    
-    ...mapMutations('projects', ['sortBy', 'setSelectedProject']),
-    ...mapActions('projects', ['watcher', 'removeProjects']),
-    
-    removeSelectedProjects() {
-      this.removeProjects(this.selected);
-      this.selected = [];
-    },
-    
-    selectedChange() {
-      if (this.selected.length === 1) {
-        this.setSelectedProject(this.selected[0]);
-      }
+  }
+})
+export default class Dashboard extends Vue {
+  private breadcrumbs = [
+    {
+      text: 'Dashboard',
+      disabled: true,
+      href: '/'
     }
-  },
-  
-  created() {
+  ];
+
+  selected: string[] = [];
+
+  dialog = true;
+
+  chipColor(status: string): string {
+    switch (status) {
+      case 'complete':
+        return '#20B2AA';
+      case 'ongoing':
+        return '#FFA500';
+      case 'overdue':
+        return '#FF6347';
+      default:
+        return '#FFFFFF';
+    }
+  }
+
+  @projects.State
+  projects!: Project[];
+
+  @projects.Mutation
+  sortBy!: (prop: string) => void;
+
+  @projects.Mutation
+  setSelectedProject!: (id: string) => void;
+
+  @projects.Action
+  watcher!: () => Promise<unknown>;
+
+  @projects.Action
+  removeProjects!: (ids: string[]) => Promise<unknown>;
+
+  removeSelectedProjects(): void {
+    this.removeProjects(this.selected);
+    this.selected = [];
+  }
+
+  selectedChange(): void {
+    if (this.selected.length === 1) {
+      this.setSelectedProject(this.selected[0]);
+    }
+  }
+
+  created(): void {
     // 实时更新数据。
     this.watcher();
   }
-};
+}
 </script>
 
 <style scoped>

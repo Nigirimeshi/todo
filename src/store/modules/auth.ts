@@ -1,77 +1,87 @@
+import {
+  VuexModule,
+  Module,
+  Mutation,
+  Action,
+  getModule
+} from 'vuex-module-decorators';
+import store from '@/store';
 import api from '@/api';
 
 const TOKEN_KEY = 'token';
 
-const state = {
-  loggedIn: false
-};
+export interface AuthState {
+  loggedIn: boolean;
+}
 
-const mutations = {
-  authSuccess: (state) => {
-    state.loggedIn = true;
-  },
-  authFailed: (state) => {
-    state.loggedIn = false;
+@Module({ dynamic: true, store, name: 'auth' })
+class Auth extends VuexModule implements AuthState {
+  loggedIn = false;
+
+  @Mutation
+  authSuccess(): void {
+    this.loggedIn = true;
   }
-};
 
-const actions = {
-  login: ({ commit }, { email, password }) => {
+  @Mutation
+  authFailed(): void {
+    this.loggedIn = false;
+  }
+
+  @Action
+  login(email: string, password: string): Promise<unknown> {
     return new Promise((resolve, reject) => {
       api.auth
         .login(email, password)
         .then((resp) => {
-          commit('authSuccess');
+          this.authSuccess();
           const token = resp.token;
           localStorage.setItem(TOKEN_KEY, token);
           api.auth.setAuthorizationHeader(token);
           resolve(resp);
         })
         .catch((err) => {
-          commit('authFailed');
+          this.authFailed();
           localStorage.removeItem(TOKEN_KEY);
           reject(err);
         });
     });
-  },
-  
-  signup: ({ commit }, { email, username, password }) => {
+  }
+
+  @Action
+  signup(email: string, username: string, password: string): Promise<unknown> {
     return new Promise((resolve, reject) => {
       api.auth
         .signup(email, username, password)
         .then((resp) => {
-          commit('authSuccess');
+          this.authSuccess();
           const token = resp.token;
           localStorage.setItem(TOKEN_KEY, token);
           api.auth.setAuthorizationHeader(token);
           resolve(resp);
         })
         .catch((err) => {
-          commit('authFailed');
+          this.authFailed();
           localStorage.removeItem(TOKEN_KEY);
           reject(err);
         });
     });
-  },
-  
-  logout: ({ commit }) => {
-    commit('authFailed');
+  }
+
+  @Action
+  logout(): void {
+    this.authFailed();
     localStorage.removeItem(TOKEN_KEY);
     api.auth.removeAuthorizationHeader();
-  },
-  
-  loadToken: ({ commit }) => {
-    const token = localStorage.getItem('token');
+  }
+
+  @Action
+  loadToken(): void {
+    const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
-      commit('authSuccess');
+      this.authSuccess();
       api.auth.setAuthorizationHeader(token);
     }
   }
-};
-
-export default {
-  namespaced: true,
-  state,
-  mutations,
-  actions
-};
+}
+export const AuthModule = getModule(Auth);
