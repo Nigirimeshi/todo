@@ -1,17 +1,20 @@
-import store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import store from '@/store';
+import { AuthModule } from '@/store/modules/auth';
 
 const routes = [
   {
     path: '/',
     name: 'Dashboard',
-    component: () => import('@/views/Dashboard.vue')
+    component: () =>
+      import(/* webpackChunkName: "redirect" */ '@/views/Dashboard.vue')
   },
   {
     path: '/projects',
     name: 'Projects',
-    component: () => import('@/views/Projects.vue'),
+    component: () =>
+      import(/* webpackChunkName: "redirect" */ '@/views/Projects.vue'),
     meta: {
       requiresAuth: true
     }
@@ -19,17 +22,20 @@ const routes = [
   {
     path: '/team',
     name: 'Team',
-    component: () => import('@/views/Team.vue')
+    component: () =>
+      import(/* webpackChunkName: "redirect" */ '@/views/Team.vue')
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/Login.vue')
+    component: () =>
+      import(/* webpackChunkName: "redirect" */ '@/views/Login.vue')
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: () => import('@/views/Signup.vue')
+    component: () =>
+      import(/* webpackChunkName: "redirect" */ '@/views/Signup.vue')
   }
 ];
 
@@ -42,7 +48,7 @@ const router = new VueRouter({
 // ⚠ 得在挂载 VueRouter 之前使用 beforeEach
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (to.name !== 'Login' && !store.state.auth.loggedIn)
+    if (to.name !== 'Login' && !AuthModule.loggedIn)
       next({
         name: 'Login',
         query: { redirect: to.fullPath }

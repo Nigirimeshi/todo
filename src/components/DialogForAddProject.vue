@@ -56,7 +56,7 @@
             <v-select
               label="Status"
               prepend-icon="mdi-progress-check"
-              :items="getAllStates"
+              :items="allStates"
               required
               v-model="status"
               :rules="statusRules"
@@ -89,13 +89,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
-import { Project } from '@/store/modules/projects';
-
-const snackbar = namespace('snackbar');
-const profile = namespace('profile');
-const projects = namespace('projects');
+import { SnackbarModule } from '@/store/modules/snackbar';
+import { ProfileModule } from '@/store/modules/profile';
+import { ProjectModule } from '@/store/modules/projects';
 
 @Component
 export default class DialogForAddProject extends Vue {
@@ -119,23 +116,16 @@ export default class DialogForAddProject extends Vue {
   statusRules = [
     (v: string): string | boolean => !!v || 'Status is required',
     (v: string): string | boolean =>
-      this.getAllStates().indexOf(v) !== -1 || 'Status invalid.'
+      this.allStates().indexOf(v) !== -1 || 'Status invalid.'
   ];
 
-  @profile.State
-  name!: string;
+  get username(): string {
+    return ProfileModule.username;
+  }
 
-  @snackbar.Mutation
-  showSnackbar!: (text: string) => void;
-
-  @snackbar.Mutation
-  closeSnackbar!: () => void;
-
-  @projects.Action
-  addProject!: (project: Project) => Promise<unknown>;
-
-  @projects.Getter
-  getAllStates!: () => string[];
+  allStates(): string[] {
+    return ProjectModule.allStates;
+  }
 
   submit(): void {
     // 提交时按钮变成加载中。
@@ -145,20 +135,20 @@ export default class DialogForAddProject extends Vue {
       title: this.title,
       content: this.content,
       due: this.due,
-      person: this.name,
+      person: this.username,
       status: this.status
     };
 
-    this.addProject(project)
+    ProjectModule.addProject(project)
       .then(() => {
         this.loading = false;
         this.dialog = false;
-        this.showSnackbar('You have added a new project.');
+        SnackbarModule.showSnackbar('You have added a new project.');
       })
       .catch((err: { message: string }) => {
         this.loading = false;
         this.dialog = false;
-        this.showSnackbar(err.message);
+        SnackbarModule.showSnackbar(err.message);
       });
   }
 

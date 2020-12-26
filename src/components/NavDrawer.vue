@@ -1,6 +1,6 @@
 <template>
   <!-- 侧边栏导航 -->
-  <v-navigation-drawer v-model="drawerModel" app color="primary">
+  <v-navigation-drawer v-model="drawer" app color="primary">
     <v-container>
       <v-row align="center" justify="center">
         <v-col cols="auto">
@@ -8,7 +8,7 @@
           <v-avatar class="ma-2" size="100">
             <v-img :src="avatar"></v-img>
           </v-avatar>
-          <p class="white--text text-center mb-0">{{ name }}</p>
+          <p class="white--text text-center mb-0">{{ username }}</p>
         </v-col>
 
         <v-col cols="auto">
@@ -44,13 +44,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
 import DialogForAddProject from '@/components/DialogForAddProject.vue';
 
-const nav = namespace('nav');
-const links = namespace('links');
-const profile = namespace('profile');
+import { NavModule } from '@/store/modules/nav';
+import { Link, LinksModule } from '@/store/modules/links';
+import { ProfileModule } from '@/store/modules/profile';
 
 @Component({
   components: {
@@ -58,26 +57,26 @@ const profile = namespace('profile');
   }
 })
 export default class NavDrawer extends Vue {
-  public selectedLink = 0;
+  private selectedLink = 0;
 
-  @nav.State
-  public drawer!: boolean;
-
-  @links.State
-  public links!: any;
-
-  @profile.State
-  public name!: string;
-
-  @profile.State
-  public avatar!: string;
-
-  get drawerModel(): boolean {
-    return this.drawer;
+  get drawer(): boolean {
+    return NavModule.drawer;
   }
 
-  set drawerModel(newVal: boolean) {
+  set drawer(newVal: boolean) {
     return;
+  }
+
+  get links(): Link[] {
+    return LinksModule.data;
+  }
+
+  get username(): string {
+    return ProfileModule.username;
+  }
+
+  get avatar(): string {
+    return ProfileModule.avatar;
   }
 }
 </script>

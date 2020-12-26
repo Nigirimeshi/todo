@@ -7,6 +7,7 @@ import {
 } from 'vuex-module-decorators';
 import { projectsCollection } from '@/plugins/firebase';
 import store from '@/store';
+import firebase from 'firebase/app';
 
 export interface Project {
   id?: string;
@@ -18,14 +19,14 @@ export interface Project {
 }
 
 export interface ProjectsState {
-  projects: Project[];
+  data: Project[];
   watched: boolean;
   selectedProject: Project;
 }
 
 @Module({ dynamic: true, store, name: 'projects' })
 class Projects extends VuexModule implements ProjectsState {
-  projects: Project[] = [];
+  data: Project[] = [];
 
   watched = false;
 
@@ -39,14 +40,14 @@ class Projects extends VuexModule implements ProjectsState {
   };
 
   get myProjects() {
-    return (name: string): Project[] => {
-      return this.projects.filter((project: Project) => {
-        return project.person === name;
+    return (username: string): Project[] => {
+      return this.data.filter((project: Project) => {
+        return project.person === username;
       });
     };
   }
 
-  get getAllStates(): string[] {
+  get allStates(): string[] {
     return ['ongoing', 'complete', 'overdue'];
   }
 
@@ -54,10 +55,10 @@ class Projects extends VuexModule implements ProjectsState {
   sortBy(prop: string): void {
     switch (prop) {
       case 'title':
-        this.projects.sort((a, b) => (a.title < b.title ? -1 : 1));
+        this.data.sort((a, b) => (a.title < b.title ? -1 : 1));
         break;
       case 'person':
-        this.projects.sort((a, b) => (a.person < b.person ? -1 : 1));
+        this.data.sort((a, b) => (a.person < b.person ? -1 : 1));
         break;
     }
   }
@@ -65,19 +66,19 @@ class Projects extends VuexModule implements ProjectsState {
   // 增删改 projects
   @Mutation
   changeProject(
-    newIndex: number,
-    oldIndex: number,
-    doc: any, // FIXME 指定类型
-    type: string
-  ): void {
+    change: firebase.firestore.DocumentChange<firebase.firestore.DocumentData>
+  ) {
+    const { newIndex, oldIndex, doc, type } = change;
     if (type === 'added') {
-      this.projects.splice(newIndex, 0, { ...doc.data(), id: doc.id });
+      const project: Project = doc.data() as Project;
+      this.data.splice(newIndex, 0, { ...project, id: doc.id });
     } else if (type === 'modified') {
       // remove the old one first
-      this.projects.splice(oldIndex, 1);
-      this.projects.splice(newIndex, 0, { ...doc.data(), id: doc.id });
+      this.data.splice(oldIndex, 1);
+      const project: Project = doc.data() as Project;
+      this.data.splice(newIndex, 0, { ...project, id: doc.id });
     } else if (type === 'removed') {
-      this.projects.splice(oldIndex, 1);
+      this.data.splice(oldIndex, 1);
     }
   }
 
@@ -88,7 +89,7 @@ class Projects extends VuexModule implements ProjectsState {
 
   @Mutation
   public setSelectedProject(id: string): void {
-    for (const p of this.projects) {
+    for (const p of this.data) {
       if (p.id === id) {
         this.selectedProject = p;
       }
@@ -96,23 +97,17 @@ class Projects extends VuexModule implements ProjectsState {
   }
 
   // 实时更新 projects，只允许执行一次
-  @Action({ rawError: true })
+  @Action
   watcher(): Promise<unknown> {
     return new Promise<void>((resolve, reject) => {
       if (!this.watched) {
-        this.context.commit('beginWatching');
+        this.beginWatching();
         // TODO 抽象操作数据接口
         // unsubscribe can be called to stop listening for changes
         projectsCollection.onSnapshot(
           (ref) => {
             ref.docChanges().forEach((change) => {
-              const { newIndex, oldIndex, doc, type } = change;
-              this.context.commit('changeProject', {
-                newIndex,
-                oldIndex,
-                doc,
-                type
-              });
+              this.changeProject(change);
             });
             resolve();
           },

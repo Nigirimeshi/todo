@@ -32,7 +32,7 @@
           <v-card-title>Signup</v-card-title>
           <v-card-text>
             <!-- 注册表单 -->
-            <v-form ref="signupForm" v-model="valid">
+            <v-form ref="form" v-model="valid">
               <v-text-field
                 v-model="email"
                 :error-messages="emailErrorMessages"
@@ -93,7 +93,7 @@
               Signup
             </v-btn>
 
-            <v-btn :to="links.login.route" class="mx-2" color="warning" router>
+            <v-btn :to="loginURL" class="mx-2" color="warning" router>
               Login
             </v-btn>
           </v-card-actions>
@@ -105,10 +105,9 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
-const links = namespace('links');
-const auth = namespace('auth');
+import { Link, LinksModule } from '@/store/modules/links';
+import { AuthModule } from '@/store/modules/auth';
 
 @Component
 export default class Signup extends Vue {
@@ -144,7 +143,8 @@ export default class Signup extends Vue {
     (v: string): string | boolean =>
       !!v || 'Password Confirmation is required.',
     (v: string): string | boolean =>
-      v === this.password || 'It does not match the password entered above.'
+      this.passwordIsConsistent(v) ||
+      'It does not match the password entered above.'
   ];
 
   alert = {
@@ -154,20 +154,24 @@ export default class Signup extends Vue {
     text: ''
   };
 
-  @links.State
-  links!: unknown; // FIXME 声明具体类型
+  loginURL = '/login';
 
-  @auth.Action
-  signup!: (
-    email: string,
-    username: string,
-    password: string
-  ) => Promise<unknown>;
+  passwordIsConsistent(v: string): boolean {
+    return v === this.password;
+  }
+
+  get links(): Link[] {
+    return LinksModule.data;
+  }
 
   submit(): void {
+    if (!this.validate()) {
+      return;
+    }
+
     this.loading = true;
 
-    this.signup(this.email, this.username, this.password)
+    AuthModule.signup(this.email, this.username, this.password)
       .then(() => {
         this.emailErrorMessages = [];
         this.usernameErrorMessages = [];
@@ -213,6 +217,10 @@ export default class Signup extends Vue {
       .finally(() => {
         this.loading = false;
       });
+  }
+
+  validate(): boolean {
+    return (this.$refs.form as Vue & { validate: () => boolean }).validate();
   }
 
   @Watch('email')

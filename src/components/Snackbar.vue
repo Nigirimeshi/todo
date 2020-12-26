@@ -10,19 +10,25 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
-const snackbar = namespace('snackbar');
+import { SnackbarModule } from '@/store/modules/snackbar';
 
 @Component
 export default class Snackbar extends Vue {
-  @snackbar.State
-  visibility!: boolean;
+  get visibility(): boolean {
+    return SnackbarModule.visibility;
+  }
 
-  @snackbar.State
-  text!: string;
+  set visibility(newVal: boolean) {
+    return;
+  }
 
-  @snackbar.Mutation
-  closeSnackbar!: () => void;
+  get text(): string {
+    return SnackbarModule.text;
+  }
+
+  private closeSnackbar() {
+    SnackbarModule.closeSnackbar();
+  }
 }
 </script>

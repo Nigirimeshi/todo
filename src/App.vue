@@ -9,10 +9,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 import { setInterceptor } from '@/plugins/axios';
 
-const auth = namespace('auth');
+import { AuthModule } from '@/store/modules/auth';
 
 @Component
 export default class App extends Vue {
@@ -20,11 +19,8 @@ export default class App extends Vue {
     return this.$vuetify.theme.dark ? 'dark' : 'light';
   }
 
-  @auth.Action
-  loadToken!: () => void;
-
   created(): void {
-    this.loadToken();
+    AuthModule.loadToken();
     setInterceptor();
   }
 }

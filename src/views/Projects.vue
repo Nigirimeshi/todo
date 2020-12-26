@@ -17,10 +17,7 @@
     <v-container class="my-5">
       <!-- 拓展面板 -->
       <v-expansion-panels multiple>
-        <v-expansion-panel
-          v-for="project in myProjects(name)"
-          :key="project.id"
-        >
+        <v-expansion-panel v-for="project in myProjects" :key="project.id">
           <v-expansion-panel-header
             >{{ project.title }}
           </v-expansion-panel-header>
@@ -37,14 +34,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
 import Nav from '@/components/Nav.vue';
 
-import { Project } from '@/store/modules/projects';
-
-const profile = namespace('profile');
-const projects = namespace('projects');
+import { ProfileModule } from '@/store/modules/profile';
+import { Project, ProjectModule } from '@/store/modules/projects';
 
 @Component({
   components: {
@@ -60,17 +54,16 @@ export default class PP extends Vue {
     }
   ];
 
-  @profile.State
-  name!: string;
+  get username(): string {
+    return ProfileModule.username;
+  }
 
-  @projects.Getter
-  myProjects!: (name: string) => Project[];
-
-  @projects.Action
-  watcher!: () => Promise<unknown>;
+  myProjects(): Project[] {
+    return ProjectModule.myProjects(this.username);
+  }
 
   create(): void {
-    this.watcher();
+    ProjectModule.watcher();
   }
 }
 </script>

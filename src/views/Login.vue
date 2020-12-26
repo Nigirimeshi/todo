@@ -68,7 +68,7 @@
               Login
             </v-btn>
 
-            <v-btn :to="links.signup.route" class="mx-2" color="warning" router>
+            <v-btn :to="signupURL" class="mx-2" color="warning" router>
               Signup
             </v-btn>
           </v-card-actions>
@@ -80,10 +80,9 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
-const links = namespace('links');
-const auth = namespace('auth');
+import { Link, LinksModule } from '@/store/modules/links';
+import { AuthModule } from '@/store/modules/auth';
 
 @Component
 export default class Login extends Vue {
@@ -111,16 +110,16 @@ export default class Login extends Vue {
     text: ''
   };
 
-  @links.State
-  links!: unknown; // FIXME 声明具体类型
+  signupURL = '/signup';
 
-  @auth.Action
-  login!: (email: string, password: string) => Promise<unknown>;
+  get links(): Link[] {
+    return LinksModule.data;
+  }
 
   submit(): void {
     this.loading = true;
 
-    this.login(this.email, this.password)
+    AuthModule.login(this.email, this.password)
       .then(() => {
         this.emailErrorMessages = [];
         this.alert = {

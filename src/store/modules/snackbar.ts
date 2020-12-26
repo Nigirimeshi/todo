@@ -6,7 +6,6 @@ import {
 } from 'vuex-module-decorators';
 
 import store from '@/store';
-import get = Reflect.get;
 
 export interface SnackbarState {
   visibility: boolean;

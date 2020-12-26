@@ -2,13 +2,13 @@ import { VuexModule, Module, getModule } from 'vuex-module-decorators';
 import store from '@/store';
 
 export interface ProfileState {
-  name: string;
+  username: string;
   avatar: string;
 }
 
 @Module({ dynamic: true, store, name: 'profile' })
 class Profile extends VuexModule implements ProfileState {
-  name = 'Yang';
+  username = 'Yang';
   avatar = '/avatar03.jpg';
 }
 

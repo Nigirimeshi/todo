@@ -3,7 +3,7 @@
     <!-- 控制侧边栏弹出的按钮 -->
     <v-app-bar-nav-icon
       class="grey--text"
-      @click.stop="switchDrawer"
+      @click.stop="this.switchDrawer"
     ></v-app-bar-nav-icon>
 
     <!-- LOGO -->
@@ -27,8 +27,8 @@
 
       <v-list class="py-0">
         <v-list-item
-          v-for="(link, name) in links"
-          :key="name"
+          v-for="link in links"
+          :key="link.text"
           router
           :to="link.route"
         >
@@ -49,20 +49,23 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
-const nav = namespace('nav');
-const Links = namespace('links');
+import { NavModule } from '@/store/modules/nav';
+import { Link, LinksModule } from '@/store/modules/links';
+import { AuthModule } from '@/store/modules/auth';
 
 @Component
 export default class Navbar extends Vue {
-  @nav.Mutation
-  switchDrawer!: () => void;
+  get links(): Link[] {
+    return LinksModule.data;
+  }
 
-  @Links.State
-  links!: unknown; // FIXME 指定类型
+  private static switchDrawer(): void {
+    NavModule.switchDrawer();
+  }
 
-  @Links.Action
-  logout!: () => void;
+  private logout() {
+    AuthModule.logout();
+  }
 }
 </script>

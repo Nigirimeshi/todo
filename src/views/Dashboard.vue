@@ -136,14 +136,11 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
-import { Project } from '@/store/modules/projects';
+import { Project, ProjectModule } from '@/store/modules/projects';
 
 import DialogForEditProject from '@/components/DialogForEditProject.vue';
 import Nav from '@/components/Nav.vue';
-
-const projects = namespace('projects');
 
 @Component({
   components: {
@@ -160,9 +157,7 @@ export default class Dashboard extends Vue {
     }
   ];
 
-  selected: string[] = [];
-
-  dialog = true;
+  private selected: string[] = [];
 
   chipColor(status: string): string {
     switch (status) {
@@ -177,35 +172,27 @@ export default class Dashboard extends Vue {
     }
   }
 
-  @projects.State
-  projects!: Project[];
+  get projects(): Project[] {
+    return ProjectModule.data;
+  }
 
-  @projects.Mutation
-  sortBy!: (prop: string) => void;
+  private sortBy(prop: string): void {
+    ProjectModule.sortBy(prop);
+  }
 
-  @projects.Mutation
-  setSelectedProject!: (id: string) => void;
-
-  @projects.Action
-  watcher!: () => Promise<unknown>;
-
-  @projects.Action
-  removeProjects!: (ids: string[]) => Promise<unknown>;
-
-  removeSelectedProjects(): void {
-    this.removeProjects(this.selected);
+  private removeSelectedProjects(): void {
+    ProjectModule.removeProjects(this.selected);
     this.selected = [];
   }
 
-  selectedChange(): void {
+  private selectedChange(): void {
     if (this.selected.length === 1) {
-      this.setSelectedProject(this.selected[0]);
+      ProjectModule.setSelectedProject(this.selected[0]);
     }
   }
 
   created(): void {
-    // 实时更新数据。
-    this.watcher();
+    ProjectModule.watcher();
   }
 }
 </script>

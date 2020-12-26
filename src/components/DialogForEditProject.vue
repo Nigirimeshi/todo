@@ -62,7 +62,7 @@
             <v-select
               label="Status"
               prepend-icon="mdi-progress-check"
-              :items="getAllStates"
+              :items="allStates"
               required
               v-model="status"
               :rules="statusRules"
@@ -89,31 +89,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 
-import { Project } from '@/store/modules/projects';
-
-const snackbar = namespace('snackbar');
-const profile = namespace('profile');
-const projects = namespace('projects');
+import { SnackbarModule } from '@/store/modules/snackbar';
+import { ProfileModule } from '@/store/modules/profile';
+import { ProjectModule } from '@/store/modules/projects';
 
 @Component
 export default class DialogForEditProject extends Vue {
-  @snackbar.Mutation
-  showSnackbar!: (text: string) => void;
-
-  @profile.State
-  name!: string;
-
-  @projects.State
-  selectedProject!: Project;
-
-  @projects.Getter
-  getAllStates!: string[];
-
-  @projects.Action
-  updateProject!: (project: Project) => Promise<unknown>;
-
   dialog = false;
   loading = false;
   valid = true;
@@ -134,41 +116,45 @@ export default class DialogForEditProject extends Vue {
   statusRules = [
     (v: string): string | boolean => !!v || 'Status is required',
     (v: string): string | boolean =>
-      this.getAllStates.indexOf(v) !== -1 || 'Status invalid.'
+      this.allStates().indexOf(v) !== -1 || 'Status invalid.'
   ];
+
+  allStates(): string[] {
+    return ProjectModule.allStates;
+  }
 
   submit(): void {
     // 提交时按钮变成加载中。
     this.loading = true;
 
     const project = {
-      id: this.selectedProject.id,
+      id: ProjectModule.selectedProject.id,
       title: this.title,
       content: this.content,
-      person: this.name,
+      person: ProfileModule.username,
       due: this.due,
       status: this.status
     };
-    this.updateProject(project)
+    ProjectModule.updateProject(project)
       .then(() => {
         this.loading = false;
         this.dialog = false;
-        this.showSnackbar('You have updated a project.');
+        SnackbarModule.showSnackbar('You have updated a project.');
       })
       .catch((err) => {
         this.loading = false;
         this.dialog = false;
-        this.showSnackbar(err.message);
+        SnackbarModule.showSnackbar(err.message);
       });
   }
 
   // 用选中项填充表单
   fillForm(): void {
-    if (this.selectedProject) {
-      this.title = this.selectedProject.title;
-      this.content = this.selectedProject.content;
-      this.due = this.selectedProject.due;
-      this.status = this.selectedProject.status;
+    if (ProjectModule.selectedProject) {
+      this.title = ProjectModule.selectedProject.title;
+      this.content = ProjectModule.selectedProject.content;
+      this.due = ProjectModule.selectedProject.due;
+      this.status = ProjectModule.selectedProject.status;
     }
   }
 }
