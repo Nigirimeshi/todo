@@ -107,39 +107,39 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
 
 import { Link, LinksModule } from '@/store/modules/links';
-import { AuthModule } from '@/store/modules/auth';
+import { UserModule } from '@/store/modules/user';
 
 @Component
 export default class Signup extends Vue {
-  valid = true;
-  loading = false;
-  email = '';
-  emailRules = [
+  private valid = true;
+  private loading = false;
+  private email = '';
+  private emailRules = [
     (v: string): string | boolean => !!v || 'E-mail is required.',
     (v: string): string | boolean => {
       const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return pattern.test(v) || 'E-mail must be valid.';
     }
   ];
-  emailErrorMessages = [];
-  username = '';
-  usernameRules = [
+  private emailErrorMessages = [];
+  private username = '';
+  private usernameRules = [
     (v: string): string | boolean => !!v || 'Username is required.',
     (v: string): string | boolean =>
       (v && v.length <= 30) || 'Username must be less than 30 characters.'
   ];
-  usernameErrorMessages = [];
-  password = '';
-  passwordRules = [
+  private usernameErrorMessages = [];
+  private password = '';
+  private passwordRules = [
     (v: string): string | boolean => !!v || 'Password is required.',
     (v: string): string | boolean =>
       (v && v.length >= 8 && v.length <= 18) ||
       'Password must be greater than 8 characters and less than 18 characters.'
   ];
-  passwordErrorMessages = [];
-  showPassword = false;
-  passwordConfirmation = '';
-  passwordConfirmationRules = [
+  private passwordErrorMessages = [];
+  private showPassword = false;
+  private passwordConfirmation = '';
+  private passwordConfirmationRules = [
     (v: string): string | boolean =>
       !!v || 'Password Confirmation is required.',
     (v: string): string | boolean =>
@@ -147,16 +147,16 @@ export default class Signup extends Vue {
       'It does not match the password entered above.'
   ];
 
-  alert = {
+  private alert = {
     success: false,
     error: false,
     color: '',
     text: ''
   };
 
-  loginURL = '/login';
+  private loginURL = '/login';
 
-  passwordIsConsistent(v: string): boolean {
+  private passwordIsConsistent(v: string): boolean {
     return v === this.password;
   }
 
@@ -164,14 +164,20 @@ export default class Signup extends Vue {
     return LinksModule.data;
   }
 
-  submit(): void {
+  private submit(): void {
     if (!this.validate()) {
       return;
     }
 
     this.loading = true;
 
-    AuthModule.signup(this.email, this.username, this.password)
+    const signupForm = {
+      email: this.email,
+      username: this.username,
+      password: this.password
+    };
+
+    UserModule.signup(signupForm)
       .then(() => {
         this.emailErrorMessages = [];
         this.usernameErrorMessages = [];
@@ -182,7 +188,6 @@ export default class Signup extends Vue {
           color: 'success',
           text: 'Success!'
         };
-
         // 重定向回登陆前访问的页面
         this.$router.push((this.$route.query.redirect as string) || '/');
       })
@@ -224,17 +229,17 @@ export default class Signup extends Vue {
   }
 
   @Watch('email')
-  emailChange(): void {
+  private emailChange(): void {
     this.emailErrorMessages = [];
   }
 
   @Watch('username')
-  usernameChange(): void {
+  private usernameChange(): void {
     this.usernameErrorMessages = [];
   }
 
   @Watch('password')
-  passwordChange(): void {
+  private passwordChange(): void {
     this.passwordErrorMessages = [];
   }
 }

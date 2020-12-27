@@ -1,12 +1,36 @@
+import axios, { AxiosResponse } from 'axios';
 import { APIResponseError, APIResponseNotAsExpected } from '@/api';
-import axios from 'axios';
 
 const LOGIN_URL = process.env.VUE_APP_API_V1_LOGIN;
 const SIGNUP_URL = process.env.VUE_APP_API_V1_SIGNUP;
 
+// 发送登录请求
+const login = (email: string, password: string) => {
+  return axios.post(LOGIN_URL, {
+    user: {
+      email: email,
+      password: password
+    }
+  });
+};
+
+// 发送注册请求
+const signup = (email: string, username: string, password: string) => {
+  return axios.post(SIGNUP_URL, {
+    user: {
+      email: email,
+      username: username,
+      password: password
+    }
+  });
+};
+
 export default {
+  login,
+  signup,
+
   // 发送登录请求
-  login(email: string, password: string) {
+  login2(email: string, password: string) {
     const data = {
       user: {
         email: email,
@@ -16,9 +40,7 @@ export default {
     return axios
       .post(LOGIN_URL, data)
       .then((resp) => {
-        const token = resp.data.user.token;
-        const username = resp.data.user.username;
-        const email = resp.data.user.email;
+        const { token, username, email } = resp.data.user;
         if (token && username && email) {
           return Promise.resolve({
             token,
@@ -46,7 +68,7 @@ export default {
   },
 
   // 发送注册请求
-  signup(email: string, username: string, password: string) {
+  signup2(email: string, username: string, password: string) {
     const data = {
       user: {
         email: email,
@@ -57,9 +79,7 @@ export default {
     return axios
       .post(SIGNUP_URL, data)
       .then((resp) => {
-        const token = resp.data.user.token;
-        const username = resp.data.user.username;
-        const email = resp.data.user.email;
+        const { token, username, email } = resp.data.user;
         if (token && username && email) {
           return Promise.resolve({
             token,
@@ -90,14 +110,5 @@ export default {
         }
         return APIResponseError(err.message);
       });
-  },
-
-  // 设置 axios 默认请求头的认证信息
-  setAuthorizationHeader(token: string): void {
-    axios.defaults.headers.common['Authorization'] = token;
-  },
-
-  removeAuthorizationHeader(): void {
-    delete axios.defaults.headers.common['Authorization'];
   }
 };

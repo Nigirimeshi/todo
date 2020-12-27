@@ -37,7 +37,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import Nav from '@/components/Nav.vue';
 
-import { ProfileModule } from '@/store/modules/profile';
+import { UserModule } from '@/store/modules/user';
 import { Project, ProjectModule } from '@/store/modules/projects';
 
 @Component({
@@ -46,7 +46,7 @@ import { Project, ProjectModule } from '@/store/modules/projects';
   }
 })
 export default class PP extends Vue {
-  breadcrumbs = [
+  private breadcrumbs = [
     {
       text: 'Projects',
       disabled: true,
@@ -55,14 +55,14 @@ export default class PP extends Vue {
   ];
 
   get username(): string {
-    return ProfileModule.username;
+    return UserModule.name;
   }
 
-  myProjects(): Project[] {
+  private myProjects(): Project[] {
     return ProjectModule.myProjects(this.username);
   }
 
-  create(): void {
+  created(): void {
     ProjectModule.watcher();
   }
 }

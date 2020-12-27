@@ -20,6 +20,11 @@ export default class Snackbar extends Vue {
   }
 
   set visibility(newVal: boolean) {
+    if (newVal) {
+      SnackbarModule.showSnackbar('');
+    } else {
+      SnackbarModule.closeSnackbar();
+    }
     return;
   }
 

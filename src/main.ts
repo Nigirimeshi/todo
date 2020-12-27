@@ -3,11 +3,12 @@ import App from '@/App.vue';
 import vuetify from '@/plugins/vuetify';
 import router from '@/router';
 import store from '@/store';
-import axios from '@/plugins/axios';
+import axios, { useRequestInterceptor } from '@/plugins/axios';
 
 Vue.config.productionTip = false;
 
 Vue.prototype.$axios = axios;
+useRequestInterceptor();
 
 new Vue({
   router,

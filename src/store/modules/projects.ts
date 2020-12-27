@@ -31,13 +31,15 @@ class Projects extends VuexModule implements ProjectsState {
   watched = false;
 
   selectedProject: Project = {
-    content: '',
     id: '',
+    title: '',
+    content: '',
     person: '',
     status: '',
-    title: '',
     due: ''
   };
+
+  selectableStates = ['ongoing', 'complete', 'overdue'];
 
   get myProjects() {
     return (username: string): Project[] => {
@@ -45,10 +47,6 @@ class Projects extends VuexModule implements ProjectsState {
         return project.person === username;
       });
     };
-  }
-
-  get allStates(): string[] {
-    return ['ongoing', 'complete', 'overdue'];
   }
 
   @Mutation
@@ -65,15 +63,17 @@ class Projects extends VuexModule implements ProjectsState {
 
   // 增删改 projects
   @Mutation
-  changeProject(
-    change: firebase.firestore.DocumentChange<firebase.firestore.DocumentData>
-  ) {
+  changeProject(change: {
+    newIndex: number;
+    oldIndex: number;
+    doc: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>;
+    type: string;
+  }) {
     const { newIndex, oldIndex, doc, type } = change;
     if (type === 'added') {
       const project: Project = doc.data() as Project;
       this.data.splice(newIndex, 0, { ...project, id: doc.id });
     } else if (type === 'modified') {
-      // remove the old one first
       this.data.splice(oldIndex, 1);
       const project: Project = doc.data() as Project;
       this.data.splice(newIndex, 0, { ...project, id: doc.id });
@@ -107,7 +107,8 @@ class Projects extends VuexModule implements ProjectsState {
         projectsCollection.onSnapshot(
           (ref) => {
             ref.docChanges().forEach((change) => {
-              this.changeProject(change);
+              const { newIndex, oldIndex, doc, type } = change;
+              this.changeProject({ newIndex, oldIndex, doc, type });
             });
             resolve();
           },

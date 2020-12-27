@@ -82,44 +82,49 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
 
 import { Link, LinksModule } from '@/store/modules/links';
-import { AuthModule } from '@/store/modules/auth';
+import { UserModule } from '@/store/modules/user';
 
 @Component
 export default class Login extends Vue {
-  valid = true;
-  loading = false;
-  email = '';
-  emailRules = [
+  private valid = true;
+  private loading = false;
+  private email = '';
+  private emailRules = [
     (v: string): string | boolean => !!v || 'E-mail is required.',
     (v: string): string | boolean => {
       const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return pattern.test(v) || 'E-mail must be valid.';
     }
   ];
-  emailErrorMessages = [];
-  password = '';
-  passwordRules = [
+  private emailErrorMessages = [];
+  private password = '';
+  private passwordRules = [
     (v: string): string | boolean => !!v || 'Password is required.'
   ];
-  showPassword = false;
+  private showPassword = false;
 
-  alert = {
+  private alert = {
     success: false,
     error: false,
     color: '',
     text: ''
   };
 
-  signupURL = '/signup';
+  private signupURL = '/signup';
 
   get links(): Link[] {
     return LinksModule.data;
   }
 
-  submit(): void {
+  private submit(): void {
     this.loading = true;
 
-    AuthModule.login(this.email, this.password)
+    const loginForm = {
+      email: this.email,
+      password: this.password
+    };
+
+    UserModule.login(loginForm)
       .then(() => {
         this.emailErrorMessages = [];
         this.alert = {
@@ -128,7 +133,6 @@ export default class Login extends Vue {
           text: 'Success! ',
           color: 'success'
         };
-
         // 重定向回登陆前访问的页面
         this.$router.push((this.$route.query.redirect as string) || '/');
       })

@@ -52,7 +52,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import { NavModule } from '@/store/modules/nav';
 import { Link, LinksModule } from '@/store/modules/links';
-import { AuthModule } from '@/store/modules/auth';
+import { UserModule } from '@/store/modules/user';
 
 @Component
 export default class Navbar extends Vue {
@@ -65,7 +65,7 @@ export default class Navbar extends Vue {
   }
 
   private logout() {
-    AuthModule.logout();
+    UserModule.logout();
   }
 }
 </script>

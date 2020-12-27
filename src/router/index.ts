@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import store from '@/store';
-import { AuthModule } from '@/store/modules/auth';
+import { UserModule } from '@/store/modules/user';
 
 const routes = [
   {
@@ -48,7 +47,7 @@ const router = new VueRouter({
 // ⚠ 得在挂载 VueRouter 之前使用 beforeEach
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (to.name !== 'Login' && !AuthModule.loggedIn)
+    if (to.name !== 'Login' && !UserModule.token)
       next({
         name: 'Login',
         query: { redirect: to.fullPath }

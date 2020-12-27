@@ -62,7 +62,7 @@
             <v-select
               label="Status"
               prepend-icon="mdi-progress-check"
-              :items="allStates"
+              :items="selectableStates"
               required
               v-model="status"
               :rules="statusRules"
@@ -91,39 +91,39 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import { SnackbarModule } from '@/store/modules/snackbar';
-import { ProfileModule } from '@/store/modules/profile';
 import { ProjectModule } from '@/store/modules/projects';
+import { UserModule } from '@/store/modules/user';
 
 @Component
 export default class DialogForEditProject extends Vue {
-  dialog = false;
-  loading = false;
-  valid = true;
-  title = '';
-  titleRules = [
+  private dialog = false;
+  private loading = false;
+  private valid = true;
+  private title = '';
+  private titleRules = [
     (v: string): string | boolean => !!v || 'Title is required',
     (v: string): string | boolean =>
       (v && v.length <= 40) || 'Title must be less than 40 characters.'
   ];
-  content = '';
-  contentRules = [
+  private content = '';
+  private contentRules = [
     (v: string): string | boolean => !!v || 'Content is required',
     (v: string): string | boolean =>
       (v && v.length <= 2048) || 'Content must be less than 2048 characters.'
   ];
-  due: null | string = null;
-  status = 'ongoing';
-  statusRules = [
+  private due: null | string = null;
+  private status = 'ongoing';
+  private statusRules = [
     (v: string): string | boolean => !!v || 'Status is required',
     (v: string): string | boolean =>
-      this.allStates().indexOf(v) !== -1 || 'Status invalid.'
+      this.selectableStates.indexOf(v) !== -1 || 'Status invalid.'
   ];
 
-  allStates(): string[] {
-    return ProjectModule.allStates;
+  get selectableStates(): string[] {
+    return ProjectModule.selectableStates;
   }
 
-  submit(): void {
+  private submit(): void {
     // 提交时按钮变成加载中。
     this.loading = true;
 
@@ -131,7 +131,7 @@ export default class DialogForEditProject extends Vue {
       id: ProjectModule.selectedProject.id,
       title: this.title,
       content: this.content,
-      person: ProfileModule.username,
+      person: UserModule.name,
       due: this.due,
       status: this.status
     };
@@ -149,7 +149,7 @@ export default class DialogForEditProject extends Vue {
   }
 
   // 用选中项填充表单
-  fillForm(): void {
+  private fillForm(): void {
     if (ProjectModule.selectedProject) {
       this.title = ProjectModule.selectedProject.title;
       this.content = ProjectModule.selectedProject.content;

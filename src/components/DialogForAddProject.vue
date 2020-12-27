@@ -56,7 +56,7 @@
             <v-select
               label="Status"
               prepend-icon="mdi-progress-check"
-              :items="allStates"
+              :items="selectableStates"
               required
               v-model="status"
               :rules="statusRules"
@@ -91,43 +91,43 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import { SnackbarModule } from '@/store/modules/snackbar';
-import { ProfileModule } from '@/store/modules/profile';
 import { ProjectModule } from '@/store/modules/projects';
+import { UserModule } from '@/store/modules/user';
 
 @Component
 export default class DialogForAddProject extends Vue {
-  dialog = false;
-  loading = false;
-  valid = true;
-  title = '';
-  titleRules = [
+  private dialog = false;
+  private loading = false;
+  private valid = true;
+  private title = '';
+  private titleRules = [
     (v: string): string | boolean => !!v || 'Title is required',
     (v: string): string | boolean =>
       (v && v.length <= 40) || 'Title must be less than 40 characters.'
   ];
-  content = '';
-  contentRules = [
+  private content = '';
+  private contentRules = [
     (v: string): string | boolean => !!v || 'Content is required',
     (v: string): string | boolean =>
       (v && v.length <= 2048) || 'Content must be less than 2048 characters.'
   ];
-  due = null;
-  status = 'ongoing';
-  statusRules = [
+  private due = null;
+  private status = 'ongoing';
+  private statusRules = [
     (v: string): string | boolean => !!v || 'Status is required',
     (v: string): string | boolean =>
-      this.allStates().indexOf(v) !== -1 || 'Status invalid.'
+      this.selectableStates.indexOf(v) !== -1 || 'Status invalid.'
   ];
 
   get username(): string {
-    return ProfileModule.username;
+    return UserModule.name;
   }
 
-  allStates(): string[] {
-    return ProjectModule.allStates;
+  get selectableStates(): string[] {
+    return ProjectModule.selectableStates;
   }
 
-  submit(): void {
+  private submit(): void {
     // 提交时按钮变成加载中。
     this.loading = true;
 
@@ -141,18 +141,18 @@ export default class DialogForAddProject extends Vue {
 
     ProjectModule.addProject(project)
       .then(() => {
-        this.loading = false;
-        this.dialog = false;
         SnackbarModule.showSnackbar('You have added a new project.');
       })
       .catch((err: { message: string }) => {
+        SnackbarModule.showSnackbar(err.message);
+      })
+      .finally(() => {
         this.loading = false;
         this.dialog = false;
-        SnackbarModule.showSnackbar(err.message);
       });
   }
 
-  reset(): void {
+  private reset(): void {
     (this.$refs.form as Vue & { reset: () => boolean }).reset();
   }
 }

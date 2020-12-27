@@ -49,7 +49,7 @@ import DialogForAddProject from '@/components/DialogForAddProject.vue';
 
 import { NavModule } from '@/store/modules/nav';
 import { Link, LinksModule } from '@/store/modules/links';
-import { ProfileModule } from '@/store/modules/profile';
+import { UserModule } from '@/store/modules/user';
 
 @Component({
   components: {
@@ -72,11 +72,11 @@ export default class NavDrawer extends Vue {
   }
 
   get username(): string {
-    return ProfileModule.username;
+    return UserModule.name;
   }
 
   get avatar(): string {
-    return ProfileModule.avatar;
+    return UserModule.avatar;
   }
 }
 </script>
