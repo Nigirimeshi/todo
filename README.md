@@ -29,13 +29,15 @@ npm install
 npm run serve
 ```
 
-## Todo
-- [x] vuex 统一管理和存储组件状态数据
-- [x] firebase 实时更新数据
-- [ ] 视图和组件：
-  - [x] 导航栏
+## TodoList
+- [x] Vuex 统一管理和存储组件状态数据
+- [x] Firebase 实时更新数据
+- [ ] 视图：
   - [x] 仪表盘
   - [x] 登录
   - [x] 注册
 - [ ] 功能：
-  - [x] 增删改查 todo
+  - [x] 增删改查 Todo
+  - [ ] 页面加载进度条
+- [] 重构：
+  - [x] 用 TypeScript 重构项目
