@@ -4,11 +4,7 @@
 
     <v-breadcrumbs :items="breadcrumbs" class="pa-0">
       <template #item="{ item }">
-        <v-breadcrumbs-item
-          :disabled="item.disabled"
-          :href="item.href"
-          class="grey--text subtitle-1"
-        >
+        <v-breadcrumbs-item :disabled="item.disabled" :href="item.href" class="grey--text subtitle-1">
           {{ item.text }}
         </v-breadcrumbs-item>
       </template>
@@ -20,14 +16,7 @@
         <v-col sm="3" md="2">
           <v-tooltip top>
             <template #activator="{ on, attrs }">
-              <v-btn
-                small
-                depressed
-                v-bind="attrs"
-                @click="sortBy('title')"
-                v-on="on"
-                class="grey--text"
-              >
+              <v-btn small depressed v-bind="attrs" @click="sortBy('title')" v-on="on" class="grey--text">
                 <v-icon left small> mdi-folder</v-icon>
                 <span class="text-lowercase">By project</span>
               </v-btn>
@@ -40,14 +29,7 @@
         <v-col sm="3" md="2">
           <v-tooltip top>
             <template #activator="{ on, attrs }">
-              <v-btn
-                small
-                depressed
-                v-bind="attrs"
-                @click="sortBy('person')"
-                v-on="on"
-                class="grey--text"
-              >
+              <v-btn small depressed v-bind="attrs" @click="sortBy('person')" v-on="on" class="grey--text">
                 <v-icon left small> mdi-account</v-icon>
                 <span class="text-lowercase">By person</span>
               </v-btn>
@@ -60,14 +42,7 @@
         <v-col sm="3" md="2" v-if="selected.length >= 1">
           <v-tooltip top>
             <template #activator="{ on, attrs }">
-              <v-btn
-                v-bind="attrs"
-                small
-                depressed
-                v-on="on"
-                class="error--text"
-                @click="removeSelectedProjects"
-              >
+              <v-btn v-bind="attrs" small depressed v-on="on" class="error--text" @click="deleteTodo">
                 <v-icon left small> mdi-trash-can-outline</v-icon>
                 <span class="text-lowercase">Delete</span>
               </v-btn>
@@ -84,12 +59,7 @@
 
       <!-- 项目列表 -->
       <v-list dense class="py-0" two-line>
-        <v-list-item-group
-          v-model="selected"
-          active-class="primary--text"
-          multiple
-          @change="selectedChange"
-        >
+        <v-list-item-group v-model="selected" active-class="primary--text" multiple @change="setSelectedTodo">
           <template v-for="(project, index) in projects">
             <div :class="`project ${project.status}`" :key="project.id">
               <v-list-item :value="project.id">
@@ -108,15 +78,8 @@
                         <div class="caption grey--text">Due by</div>
                         <div>{{ project.due }}</div>
                       </v-col>
-                      <v-col
-                        class="d-flex align-center justify-end"
-                        md="2"
-                        sm="4"
-                      >
-                        <v-chip
-                          :color="chipColor(project.status)"
-                          class="caption white--text"
-                        >
+                      <v-col class="d-flex align-center justify-end" md="2" sm="4">
+                        <v-chip :color="chipColor(project.status)" class="caption white--text">
                           {{ project.status }}
                         </v-chip>
                       </v-col>
@@ -137,7 +100,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import { Project, ProjectModule } from '@/store/modules/projects';
+import { Todo, TodoListModule } from '@/store/modules/todo-list';
 
 import DialogForEditProject from '@/components/DialogForEditProject.vue';
 import Nav from '@/components/Nav.vue';
@@ -172,27 +135,27 @@ export default class Dashboard extends Vue {
     }
   }
 
-  get projects(): Project[] {
-    return ProjectModule.data;
+  get projects(): Todo[] {
+    return TodoListModule.todos;
   }
 
   private sortBy(prop: string): void {
-    ProjectModule.sortBy(prop);
+    TodoListModule.sort_by(prop);
   }
 
-  private removeSelectedProjects(): void {
-    ProjectModule.removeProjects(this.selected);
+  private deleteTodo(): void {
+    TodoListModule.deleteTodoList(this.selected);
     this.selected = [];
   }
 
-  private selectedChange(): void {
+  private setSelectedTodo(): void {
     if (this.selected.length === 1) {
-      ProjectModule.setSelectedProject(this.selected[0]);
+      TodoListModule.SET_SELECTED_TODO(this.selected[0]);
     }
   }
 
   created(): void {
-    ProjectModule.watcher();
+    TodoListModule.watcher();
   }
 }
 </script>

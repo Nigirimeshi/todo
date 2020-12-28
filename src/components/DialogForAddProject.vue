@@ -1,14 +1,7 @@
 <template>
   <div>
     <!-- 创建新项目按钮 -->
-    <v-btn
-      depressed
-      color=""
-      class="text-capitalize"
-      @click.stop="dialog = true"
-    >
-      Add new project
-    </v-btn>
+    <v-btn depressed color="" class="text-capitalize" @click.stop="dialog = true"> Add new project </v-btn>
 
     <!-- 新建项目对话框 -->
     <v-dialog v-model="dialog" max-width="600px">
@@ -65,20 +58,10 @@
 
             <div class="mt-4">
               <!-- 提交按钮 -->
-              <v-btn
-                color="primary"
-                class="mr-4"
-                @click="submit"
-                :disabled="!valid"
-                :loading="loading"
-              >
-                Submit
-              </v-btn>
+              <v-btn color="primary" class="mr-4" @click="submit" :disabled="!valid" :loading="loading"> Submit </v-btn>
 
               <!-- 重置表单按钮 -->
-              <v-btn class="white--text" color="warning" @click="reset">
-                Reset
-              </v-btn>
+              <v-btn class="white--text" color="warning" @click="reset"> Reset </v-btn>
             </div>
           </v-form>
         </v-card-text>
@@ -91,7 +74,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import { SnackbarModule } from '@/store/modules/snackbar';
-import { ProjectModule } from '@/store/modules/projects';
+import { TodoListModule } from '@/store/modules/todo-list';
 import { UserModule } from '@/store/modules/user';
 
 @Component
@@ -102,21 +85,18 @@ export default class DialogForAddProject extends Vue {
   private title = '';
   private titleRules = [
     (v: string): string | boolean => !!v || 'Title is required',
-    (v: string): string | boolean =>
-      (v && v.length <= 40) || 'Title must be less than 40 characters.'
+    (v: string): string | boolean => (v && v.length <= 40) || 'Title must be less than 40 characters.'
   ];
   private content = '';
   private contentRules = [
     (v: string): string | boolean => !!v || 'Content is required',
-    (v: string): string | boolean =>
-      (v && v.length <= 2048) || 'Content must be less than 2048 characters.'
+    (v: string): string | boolean => (v && v.length <= 2048) || 'Content must be less than 2048 characters.'
   ];
   private due = null;
   private status = 'ongoing';
   private statusRules = [
     (v: string): string | boolean => !!v || 'Status is required',
-    (v: string): string | boolean =>
-      this.selectableStates.indexOf(v) !== -1 || 'Status invalid.'
+    (v: string): string | boolean => this.selectableStates.indexOf(v) !== -1 || 'Status invalid.'
   ];
 
   get username(): string {
@@ -124,7 +104,7 @@ export default class DialogForAddProject extends Vue {
   }
 
   get selectableStates(): string[] {
-    return ProjectModule.selectableStates;
+    return TodoListModule.selectableStates;
   }
 
   private submit(): void {
@@ -139,7 +119,7 @@ export default class DialogForAddProject extends Vue {
       status: this.status
     };
 
-    ProjectModule.addProject(project)
+    TodoListModule.addTodo(project)
       .then(() => {
         SnackbarModule.showSnackbar('You have added a new project.');
       })

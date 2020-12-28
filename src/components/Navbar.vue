@@ -1,10 +1,7 @@
 <template>
   <v-app-bar app flat>
     <!-- 控制侧边栏弹出的按钮 -->
-    <v-app-bar-nav-icon
-      class="grey--text"
-      @click.stop="this.switchDrawer"
-    ></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon class="grey--text" @click.stop="toggleSidebar"></v-app-bar-nav-icon>
 
     <!-- LOGO -->
     <v-toolbar-title class="grey--text">
@@ -13,7 +10,7 @@
 
     <v-spacer></v-spacer>
 
-    <!-- 切换黑暗主题 -->
+    <!-- 切换暗黑主题 -->
     <v-switch v-model="$vuetify.theme.dark" hide-details inset></v-switch>
 
     <!-- 下拉菜单 -->
@@ -26,15 +23,8 @@
       </template>
 
       <v-list class="py-0">
-        <v-list-item
-          v-for="link in links"
-          :key="link.text"
-          router
-          :to="link.route"
-        >
-          <v-list-item-title class="grey--text"
-            >{{ link.text }}
-          </v-list-item-title>
+        <v-list-item v-for="link in links" :key="link.text" router :to="link.route">
+          <v-list-item-title class="grey--text">{{ link.text }} </v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -50,7 +40,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import { NavModule } from '@/store/modules/nav';
+import { AppModule } from '@/store/modules/app';
 import { Link, LinksModule } from '@/store/modules/links';
 import { UserModule } from '@/store/modules/user';
 
@@ -60,11 +50,11 @@ export default class Navbar extends Vue {
     return LinksModule.data;
   }
 
-  private static switchDrawer(): void {
-    NavModule.switchDrawer();
+  private toggleSidebar(): void {
+    AppModule.toggleSidebar();
   }
 
-  private logout() {
+  private logout(): void {
     UserModule.logout();
   }
 }

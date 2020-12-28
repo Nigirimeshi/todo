@@ -25,6 +25,15 @@ export function useRequestInterceptor(): void {
   );
 }
 
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (err) => {
+    return Promise.reject(err);
+  }
+);
+
 export function setHeader(key: string, value: string): void {
   axios.defaults.headers.common[key] = value;
 }

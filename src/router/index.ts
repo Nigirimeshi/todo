@@ -1,40 +1,31 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { UserModule } from '@/store/modules/user';
+import Dashboard from '@/views/Dashboard.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Dashboard',
-    component: () =>
-      import(/* webpackChunkName: "redirect" */ '@/views/Dashboard.vue')
-  },
-  {
-    path: '/projects',
-    name: 'Projects',
-    component: () =>
-      import(/* webpackChunkName: "redirect" */ '@/views/Projects.vue'),
-    meta: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: '/team',
-    name: 'Team',
-    component: () =>
-      import(/* webpackChunkName: "redirect" */ '@/views/Team.vue')
+    component: Dashboard
   },
   {
     path: '/login',
     name: 'Login',
-    component: () =>
-      import(/* webpackChunkName: "redirect" */ '@/views/Login.vue')
+    component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: () =>
-      import(/* webpackChunkName: "redirect" */ '@/views/Signup.vue')
+    component: () => import(/* webpackChunkName: "signup" */ '@/views/Signup.vue')
+  },
+  {
+    path: '/todo-list',
+    name: 'TodoList',
+    component: () => import(/* webpackChunkName: "todo-list" */ '@/views/TodoList.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ];
 

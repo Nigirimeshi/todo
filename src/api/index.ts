@@ -10,6 +10,6 @@ export function APIResponseError(message: string) {
 
 export function APIResponseNotAsExpected(url: string) {
   return Promise.reject({
-    message: 'The response returned by the API[' + url + '] is not as expected.'
+    message: `The response returned by the API[${url}] is not as expected.`
   });
 }

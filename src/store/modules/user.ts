@@ -1,11 +1,4 @@
-import {
-  VuexModule,
-  Module,
-  Mutation,
-  Action,
-  getModule
-} from 'vuex-module-decorators';
-
+import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators';
 import store from '@/store';
 import api from '@/api';
 import { getToken, setToken, removeToken } from '@/utils/cookies';
@@ -45,29 +38,28 @@ class User extends VuexModule implements UserState {
   }
 
   @Action
+  public resetToken() {
+    this.SET_TOKEN('');
+    removeToken();
+  }
+
+  @Action
   public async login(userInfo: { email: string; password: string }) {
     let { email, password } = userInfo;
     email = email.trim();
     password = password.trim();
-    const { data } = await api.user.login(email, password);
-    // TODO 异常处理。
-    const { token } = data;
+    const { token } = await api.user.login(email, password);
+    console.info('get token:', token);
     setToken(token);
   }
 
   @Action
-  public async signup(userInfo: {
-    email: string;
-    username: string;
-    password: string;
-  }) {
+  public async signup(userInfo: { email: string; username: string; password: string }) {
     let { email, username, password } = userInfo;
     email = email.trim();
     username = username.trim();
     password = password.trim();
-    const { data } = await api.user.signup(email, username, password);
-    // TODO 异常处理。
-    const { token } = data;
+    const { token } = await api.user.signup(email, username, password);
     setToken(token);
   }
 
@@ -79,11 +71,6 @@ class User extends VuexModule implements UserState {
     // TODO 发送注销请求。
     this.resetToken();
   }
-
-  @Action
-  public resetToken() {
-    this.SET_TOKEN('');
-    removeToken();
-  }
 }
+
 export const UserModule = getModule(User);

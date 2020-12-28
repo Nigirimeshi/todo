@@ -1,5 +1,5 @@
-import { VuexModule, Module, getModule } from 'vuex-module-decorators';
 import store from '@/store';
+import { VuexModule, Module, getModule } from 'vuex-module-decorators';
 
 export interface Link {
   text: string;
@@ -13,21 +13,16 @@ export interface LinksState {
 
 @Module({ dynamic: true, store, name: 'links' })
 class Links extends VuexModule implements LinksState {
-  data = [
+  public data = [
     {
       text: 'Dashboard',
       icon: 'mdi-view-dashboard',
       route: '/'
     },
     {
-      text: 'Folder',
+      text: 'Todos',
       icon: 'mdi-folder',
-      route: '/projects'
-    },
-    {
-      text: 'Person',
-      icon: 'mdi-account',
-      route: '/team'
+      route: '/todo-list'
     },
     {
       text: 'Login',

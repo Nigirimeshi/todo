@@ -58,19 +58,9 @@
 
           <v-card-actions class="pb-4">
             <!-- 登录按钮 -->
-            <v-btn
-              :disabled="!valid"
-              :loading="loading"
-              class="mx-2"
-              color="success"
-              @click="submit"
-            >
-              Login
-            </v-btn>
+            <v-btn :disabled="!valid" :loading="loading" class="mx-2" color="success" @click="submit"> Login </v-btn>
 
-            <v-btn :to="signupURL" class="mx-2" color="warning" router>
-              Signup
-            </v-btn>
+            <v-btn :to="signupURL" class="mx-2" color="warning" router> Signup </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -98,9 +88,7 @@ export default class Login extends Vue {
   ];
   private emailErrorMessages = [];
   private password = '';
-  private passwordRules = [
-    (v: string): string | boolean => !!v || 'Password is required.'
-  ];
+  private passwordRules = [(v: string): string | boolean => !!v || 'Password is required.'];
   private showPassword = false;
 
   private alert = {

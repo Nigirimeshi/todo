@@ -21,20 +21,12 @@
     <!-- 菜单项 -->
     <v-list>
       <v-list-item-group v-model="selectedLink" color="white">
-        <v-list-item
-          v-for="(link, name) in links"
-          :key="name"
-          router
-          :to="link.route"
-        >
+        <v-list-item v-for="(link, name) in links" :key="name" router :to="link.route">
           <v-list-item-icon>
             <v-icon color="white" v-text="link.icon"></v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title
-              class="white--text"
-              v-text="link.text"
-            ></v-list-item-title>
+            <v-list-item-title class="white--text" v-text="link.text"></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
@@ -47,7 +39,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import DialogForAddProject from '@/components/DialogForAddProject.vue';
 
-import { NavModule } from '@/store/modules/nav';
+import { AppModule } from '@/store/modules/app';
 import { Link, LinksModule } from '@/store/modules/links';
 import { UserModule } from '@/store/modules/user';
 
@@ -60,7 +52,7 @@ export default class NavDrawer extends Vue {
   private selectedLink = 0;
 
   get drawer(): boolean {
-    return NavModule.drawer;
+    return AppModule.sidebar.opened;
   }
 
   set drawer(newVal: boolean) {

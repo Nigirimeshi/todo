@@ -20,5 +20,5 @@ import Snackbar from '@/components/Snackbar.vue';
     Snackbar
   }
 })
-export default class Nav extends Vue {}
+export default class App extends Vue {}
 </script>

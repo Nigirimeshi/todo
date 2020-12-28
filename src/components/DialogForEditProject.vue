@@ -3,14 +3,7 @@
     <!-- 编辑项目对话框 -->
     <v-tooltip top>
       <template #activator="{ on, attrs }">
-        <v-btn
-          small
-          depressed
-          v-bind="attrs"
-          v-on="on"
-          @click="fillForm"
-          @click.stop="dialog = true"
-        >
+        <v-btn small depressed v-bind="attrs" v-on="on" @click="fillForm" @click.stop="dialog = true">
           <v-icon small left>mdi-pencil</v-icon>
           <span class="text-lowercase">Edit</span>
         </v-btn>
@@ -71,14 +64,7 @@
 
             <div class="mt-4">
               <!-- 提交按钮 -->
-              <v-btn
-                color="primary"
-                @click="submit"
-                :disabled="!valid"
-                :loading="loading"
-              >
-                Update
-              </v-btn>
+              <v-btn color="primary" @click="submit" :disabled="!valid" :loading="loading"> Update </v-btn>
             </div>
           </v-form>
         </v-card-text>
@@ -91,7 +77,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import { SnackbarModule } from '@/store/modules/snackbar';
-import { ProjectModule } from '@/store/modules/projects';
+import { TodoListModule } from '@/store/modules/todo-list';
 import { UserModule } from '@/store/modules/user';
 
 @Component
@@ -102,25 +88,22 @@ export default class DialogForEditProject extends Vue {
   private title = '';
   private titleRules = [
     (v: string): string | boolean => !!v || 'Title is required',
-    (v: string): string | boolean =>
-      (v && v.length <= 40) || 'Title must be less than 40 characters.'
+    (v: string): string | boolean => (v && v.length <= 40) || 'Title must be less than 40 characters.'
   ];
   private content = '';
   private contentRules = [
     (v: string): string | boolean => !!v || 'Content is required',
-    (v: string): string | boolean =>
-      (v && v.length <= 2048) || 'Content must be less than 2048 characters.'
+    (v: string): string | boolean => (v && v.length <= 2048) || 'Content must be less than 2048 characters.'
   ];
   private due: null | string = null;
   private status = 'ongoing';
   private statusRules = [
     (v: string): string | boolean => !!v || 'Status is required',
-    (v: string): string | boolean =>
-      this.selectableStates.indexOf(v) !== -1 || 'Status invalid.'
+    (v: string): string | boolean => this.selectableStates.indexOf(v) !== -1 || 'Status invalid.'
   ];
 
   get selectableStates(): string[] {
-    return ProjectModule.selectableStates;
+    return TodoListModule.selectableStates;
   }
 
   private submit(): void {
@@ -128,14 +111,14 @@ export default class DialogForEditProject extends Vue {
     this.loading = true;
 
     const project = {
-      id: ProjectModule.selectedProject.id,
+      id: TodoListModule.selectedTodo.id,
       title: this.title,
       content: this.content,
       person: UserModule.name,
       due: this.due,
       status: this.status
     };
-    ProjectModule.updateProject(project)
+    TodoListModule.updateTodo(project)
       .then(() => {
         this.loading = false;
         this.dialog = false;
@@ -150,11 +133,11 @@ export default class DialogForEditProject extends Vue {
 
   // 用选中项填充表单
   private fillForm(): void {
-    if (ProjectModule.selectedProject) {
-      this.title = ProjectModule.selectedProject.title;
-      this.content = ProjectModule.selectedProject.content;
-      this.due = ProjectModule.selectedProject.due;
-      this.status = ProjectModule.selectedProject.status;
+    if (TodoListModule.selectedTodo) {
+      this.title = TodoListModule.selectedTodo.title;
+      this.content = TodoListModule.selectedTodo.content;
+      this.due = TodoListModule.selectedTodo.due;
+      this.status = TodoListModule.selectedTodo.status;
     }
   }
 }

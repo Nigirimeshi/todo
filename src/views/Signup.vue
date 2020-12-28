@@ -83,19 +83,9 @@
           </v-card-text>
 
           <v-card-actions class="pb-4">
-            <v-btn
-              :disabled="!valid"
-              :loading="loading"
-              class="mx-2"
-              color="success"
-              @click="submit"
-            >
-              Signup
-            </v-btn>
+            <v-btn :disabled="!valid" :loading="loading" class="mx-2" color="success" @click="submit"> Signup </v-btn>
 
-            <v-btn :to="loginURL" class="mx-2" color="warning" router>
-              Login
-            </v-btn>
+            <v-btn :to="loginURL" class="mx-2" color="warning" router> Login </v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -125,8 +115,7 @@ export default class Signup extends Vue {
   private username = '';
   private usernameRules = [
     (v: string): string | boolean => !!v || 'Username is required.',
-    (v: string): string | boolean =>
-      (v && v.length <= 30) || 'Username must be less than 30 characters.'
+    (v: string): string | boolean => (v && v.length <= 30) || 'Username must be less than 30 characters.'
   ];
   private usernameErrorMessages = [];
   private password = '';
@@ -140,11 +129,8 @@ export default class Signup extends Vue {
   private showPassword = false;
   private passwordConfirmation = '';
   private passwordConfirmationRules = [
-    (v: string): string | boolean =>
-      !!v || 'Password Confirmation is required.',
-    (v: string): string | boolean =>
-      this.passwordIsConsistent(v) ||
-      'It does not match the password entered above.'
+    (v: string): string | boolean => !!v || 'Password Confirmation is required.',
+    (v: string): string | boolean => this.passwordIsConsistent(v) || 'It does not match the password entered above.'
   ];
 
   private alert = {
@@ -193,22 +179,13 @@ export default class Signup extends Vue {
       })
       .catch((err) => {
         if ('email' in err) {
-          this.emailErrorMessages.push.apply(
-            this.emailErrorMessages,
-            err.email
-          );
+          this.emailErrorMessages.push.apply(this.emailErrorMessages, err.email);
         }
         if ('username' in err) {
-          this.usernameErrorMessages.push.apply(
-            this.usernameErrorMessages,
-            err.username
-          );
+          this.usernameErrorMessages.push.apply(this.usernameErrorMessages, err.username);
         }
         if ('password' in err) {
-          this.passwordErrorMessages.push.apply(
-            this.passwordErrorMessages,
-            err.password
-          );
+          this.passwordErrorMessages.push.apply(this.passwordErrorMessages, err.password);
         }
         if ('message' in err) {
           this.alert = {
