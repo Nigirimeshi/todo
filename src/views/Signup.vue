@@ -2,31 +2,7 @@
   <v-container fill-height>
     <v-row align="center" justify="center">
       <v-col>
-        <!-- 提示条 -->
-        <v-alert
-          dense
-          dismissible
-          v-model="alert.success"
-          dark
-          :color="alert.color"
-          class="mx-auto"
-          max-width="600px"
-          icon="mdi-check"
-        >
-          {{ alert.text }}
-        </v-alert>
-        <v-alert
-          dense
-          dismissible
-          v-model="alert.error"
-          dark
-          :color="alert.color"
-          class="mx-auto"
-          icon="mdi-alert-circle"
-          max-width="600px"
-        >
-          {{ alert.text }}
-        </v-alert>
+        <Alert :props="alert" />
 
         <v-card class="mx-auto" max-width="600px">
           <v-card-title>Signup</v-card-title>
@@ -84,7 +60,6 @@
 
           <v-card-actions class="pb-4">
             <v-btn :disabled="!valid" :loading="loading" class="mx-2" color="success" @click="submit"> Signup </v-btn>
-
             <v-btn :to="loginURL" class="mx-2" color="warning" router> Login </v-btn>
           </v-card-actions>
         </v-card>
@@ -96,10 +71,16 @@
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
 
+import Alert from '@/components/Alert.vue';
+
 import { Link, LinksModule } from '@/store/modules/links';
 import { UserModule } from '@/store/modules/user';
 
-@Component
+@Component({
+  components: {
+    Alert
+  }
+})
 export default class Signup extends Vue {
   private valid = true;
   private loading = false;
@@ -134,10 +115,10 @@ export default class Signup extends Vue {
   ];
 
   private alert = {
-    success: false,
-    error: false,
+    status: '',
     color: '',
-    text: ''
+    text: '',
+    maxWidth: '600px'
   };
 
   private loginURL = '/login';
@@ -149,7 +130,17 @@ export default class Signup extends Vue {
   get links(): Link[] {
     return LinksModule.data;
   }
+  private alertSuccess(text: string): void {
+    this.alert.status = 'success';
+    this.alert.color = 'success';
+    this.alert.text = text;
+  }
 
+  private alertError(text: string): void {
+    this.alert.status = 'error';
+    this.alert.color = 'error';
+    this.alert.text = text;
+  }
   private submit(): void {
     if (!this.validate()) {
       return;
@@ -168,13 +159,7 @@ export default class Signup extends Vue {
         this.emailErrorMessages = [];
         this.usernameErrorMessages = [];
         this.passwordErrorMessages = [];
-        this.alert = {
-          error: false,
-          success: true,
-          color: 'success',
-          text: 'Success!'
-        };
-        // 重定向回登陆前访问的页面
+        this.alertSuccess('Success!');
         this.$router.push((this.$route.query.redirect as string) || '/');
       })
       .catch((err) => {
@@ -188,12 +173,7 @@ export default class Signup extends Vue {
           this.passwordErrorMessages.push.apply(this.passwordErrorMessages, err.password);
         }
         if ('message' in err) {
-          this.alert = {
-            error: true,
-            success: false,
-            text: 'Error! ' + err.message,
-            color: 'error'
-          };
+          this.alertError(`Error! ${err.message}`);
         }
       })
       .finally(() => {
@@ -201,7 +181,7 @@ export default class Signup extends Vue {
       });
   }
 
-  validate(): boolean {
+  private validate(): boolean {
     return (this.$refs.form as Vue & { validate: () => boolean }).validate();
   }
 
