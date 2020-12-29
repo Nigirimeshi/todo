@@ -44,57 +44,25 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 
-import Alert from '@/components/Alert.vue';
+import Alert from '@/components/Alert/index.vue';
 
 import { Link, LinksModule } from '@/store/modules/links';
 import { UserModule } from '@/store/modules/user';
+import { AlertMixin } from '@/components/Alert/mixin';
+import { LoginMixin } from './mixin';
 
 @Component({
   components: {
     Alert
   }
 })
-export default class Login extends Vue {
-  private valid = true;
-  private loading = false;
-  private email = '';
-  private emailRules = [
-    (v: string): string | boolean => !!v || 'E-mail is required.',
-    (v: string): string | boolean => {
-      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return pattern.test(v) || 'E-mail must be valid.';
-    }
-  ];
-  private emailErrorMessages = [];
-  private password = '';
-  private passwordRules = [(v: string): string | boolean => !!v || 'Password is required.'];
-  private showPassword = false;
-
-  private alert = {
-    status: '',
-    color: '',
-    text: '',
-    maxWidth: '600px'
-  };
-
+export default class Login extends Mixins(AlertMixin, LoginMixin) {
   private signupURL = '/signup';
 
   get links(): Link[] {
     return LinksModule.data;
-  }
-
-  private alertSuccess(text: string): void {
-    this.alert.status = 'success';
-    this.alert.color = 'success';
-    this.alert.text = text;
-  }
-
-  private alertError(text: string): void {
-    this.alert.status = 'error';
-    this.alert.color = 'error';
-    this.alert.text = text;
   }
 
   private submit(): void {
@@ -124,14 +92,8 @@ export default class Login extends Vue {
       });
   }
 
-  @Watch('email')
-  emailChange(): void {
-    this.emailErrorMessages = [];
-  }
-
-  @Watch('password')
-  passwordChange(): void {
-    this.emailErrorMessages = [];
+  created(): void {
+    this.setMaxWidth('600px');
   }
 }
 </script>

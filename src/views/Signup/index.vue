@@ -69,78 +69,27 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 
-import Alert from '@/components/Alert.vue';
+import Alert from '@/components/Alert/index.vue';
 
 import { Link, LinksModule } from '@/store/modules/links';
 import { UserModule } from '@/store/modules/user';
+import { AlertMixin } from '@/components/Alert/mixin';
+import { SignupMixin } from './mixin';
 
 @Component({
   components: {
     Alert
   }
 })
-export default class Signup extends Vue {
-  private valid = true;
-  private loading = false;
-  private email = '';
-  private emailRules = [
-    (v: string): string | boolean => !!v || 'E-mail is required.',
-    (v: string): string | boolean => {
-      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      return pattern.test(v) || 'E-mail must be valid.';
-    }
-  ];
-  private emailErrorMessages = [];
-  private username = '';
-  private usernameRules = [
-    (v: string): string | boolean => !!v || 'Username is required.',
-    (v: string): string | boolean => (v && v.length <= 30) || 'Username must be less than 30 characters.'
-  ];
-  private usernameErrorMessages = [];
-  private password = '';
-  private passwordRules = [
-    (v: string): string | boolean => !!v || 'Password is required.',
-    (v: string): string | boolean =>
-      (v && v.length >= 8 && v.length <= 18) ||
-      'Password must be greater than 8 characters and less than 18 characters.'
-  ];
-  private passwordErrorMessages = [];
-  private showPassword = false;
-  private passwordConfirmation = '';
-  private passwordConfirmationRules = [
-    (v: string): string | boolean => !!v || 'Password Confirmation is required.',
-    (v: string): string | boolean => this.passwordIsConsistent(v) || 'It does not match the password entered above.'
-  ];
-
-  private alert = {
-    status: '',
-    color: '',
-    text: '',
-    maxWidth: '600px'
-  };
-
+export default class Signup extends Mixins(SignupMixin, AlertMixin) {
   private loginURL = '/login';
-
-  private passwordIsConsistent(v: string): boolean {
-    return v === this.password;
-  }
 
   get links(): Link[] {
     return LinksModule.data;
   }
-  private alertSuccess(text: string): void {
-    this.alert.status = 'success';
-    this.alert.color = 'success';
-    this.alert.text = text;
-  }
 
-  private alertError(text: string): void {
-    this.alert.status = 'error';
-    this.alert.color = 'error';
-    this.alert.text = text;
-  }
   private submit(): void {
     if (!this.validate()) {
       return;
@@ -181,23 +130,8 @@ export default class Signup extends Vue {
       });
   }
 
-  private validate(): boolean {
-    return (this.$refs.form as Vue & { validate: () => boolean }).validate();
-  }
-
-  @Watch('email')
-  private emailChange(): void {
-    this.emailErrorMessages = [];
-  }
-
-  @Watch('username')
-  private usernameChange(): void {
-    this.usernameErrorMessages = [];
-  }
-
-  @Watch('password')
-  private passwordChange(): void {
-    this.passwordErrorMessages = [];
+  created(): void {
+    this.setMaxWidth('600px');
   }
 }
 </script>

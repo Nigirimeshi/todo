@@ -12,12 +12,12 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '@/views/Login.vue')
+    component: () => import(/* webpackChunkName: "login" */ '@/views/Login/index.vue')
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: () => import(/* webpackChunkName: "signup" */ '@/views/Signup.vue')
+    component: () => import(/* webpackChunkName: "signup" */ '@/views/Signup/index.vue')
   },
   {
     path: '/todo-list',
@@ -38,7 +38,7 @@ const router = new VueRouter({
 // ⚠ 得在挂载 VueRouter 之前使用 beforeEach
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (to.name !== 'Login' && !UserModule.token)
+    if (to.name !== 'index.vue' && !UserModule.token)
       next({
         name: 'Login',
         query: { redirect: to.fullPath }
