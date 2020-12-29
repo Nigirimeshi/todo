@@ -18,10 +18,10 @@
             <template #activator="{ on, attrs }">
               <v-btn small depressed v-bind="attrs" @click="sortBy('title')" v-on="on" class="grey--text">
                 <v-icon left small> mdi-folder</v-icon>
-                <span class="text-lowercase">By project</span>
+                <span class="text-lowercase">By title</span>
               </v-btn>
             </template>
-            <span>Sort projects by project name</span>
+            <span>Sort to-do list by title</span>
           </v-tooltip>
         </v-col>
 
@@ -34,7 +34,7 @@
                 <span class="text-lowercase">By person</span>
               </v-btn>
             </template>
-            <span>Sort projects by person</span>
+            <span>Sort to-do list by person</span>
           </v-tooltip>
         </v-col>
 
@@ -47,7 +47,7 @@
                 <span class="text-lowercase">Delete</span>
               </v-btn>
             </template>
-            <span>Delete selected projects</span>
+            <span>Delete the selected to-do list</span>
           </v-tooltip>
         </v-col>
 
@@ -60,27 +60,27 @@
       <!-- 项目列表 -->
       <v-list dense class="py-0" two-line>
         <v-list-item-group v-model="selected" active-class="primary--text" multiple @change="setSelectedTodo">
-          <template v-for="(project, index) in projects">
-            <div :class="`project ${project.status}`" :key="project.id">
-              <v-list-item :value="project.id">
+          <template v-for="(todo, index) in todoList">
+            <div :class="`todo ${todo.status}`" :key="todo.id">
+              <v-list-item :value="todo.id">
                 <template #default="{}">
                   <v-list-item-content>
                     <v-row>
                       <v-col md="6" sm="12">
-                        <div class="caption grey--text">Project title</div>
-                        <div>{{ project.title }}</div>
+                        <div class="caption grey--text">Title</div>
+                        <div>{{ todo.title }}</div>
                       </v-col>
                       <v-col md="2" sm="4">
                         <div class="caption grey--text">Person</div>
-                        <div>{{ project.person }}</div>
+                        <div>{{ todo.person }}</div>
                       </v-col>
                       <v-col md="2" sm="4">
                         <div class="caption grey--text">Due by</div>
-                        <div>{{ project.due }}</div>
+                        <div>{{ todo.due }}</div>
                       </v-col>
                       <v-col class="d-flex align-center justify-end" md="2" sm="4">
-                        <v-chip :color="chipColor(project.status)" class="caption white--text">
-                          {{ project.status }}
+                        <v-chip :color="chipColor(todo.status)" class="caption white--text">
+                          {{ todo.status }}
                         </v-chip>
                       </v-col>
                     </v-row>
@@ -88,7 +88,7 @@
                 </template>
               </v-list-item>
 
-              <v-divider v-if="index < projects.length - 1" :key="index" />
+              <v-divider v-if="index < todoList.length - 1" :key="index" />
             </div>
           </template>
         </v-list-item-group>
@@ -135,7 +135,7 @@ export default class Dashboard extends Vue {
     }
   }
 
-  get projects(): Todo[] {
+  get todoList(): Todo[] {
     return TodoListModule.todos;
   }
 
@@ -161,15 +161,15 @@ export default class Dashboard extends Vue {
 </script>
 
 <style scoped>
-.project.complete {
+.todo.complete {
   border-left: 4px solid lightseagreen;
 }
 
-.project.ongoing {
+.todo.ongoing {
   border-left: 4px solid orange;
 }
 
-.project.overdue {
+.todo.overdue {
   border-left: 4px solid tomato;
 }
 </style>
