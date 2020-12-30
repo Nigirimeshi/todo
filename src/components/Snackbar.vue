@@ -9,31 +9,30 @@
 </template>
 
 <script lang="ts">
+import { AppModule } from '@/store/modules/app';
 import { Component, Vue } from 'vue-property-decorator';
-
-import { SnackbarModule } from '@/store/modules/snackbar';
 
 @Component
 export default class Snackbar extends Vue {
   get visibility(): boolean {
-    return SnackbarModule.visibility;
+    return AppModule.snackbar.visibility;
   }
 
   set visibility(newVal: boolean) {
     if (newVal) {
-      SnackbarModule.showSnackbar('');
+      AppModule.showSnackbar('');
     } else {
-      SnackbarModule.closeSnackbar();
+      AppModule.closeSnackbar();
     }
     return;
   }
 
   get text(): string {
-    return SnackbarModule.text;
+    return AppModule.snackbar.text;
   }
 
   private closeSnackbar() {
-    SnackbarModule.closeSnackbar();
+    AppModule.closeSnackbar();
   }
 }
 </script>

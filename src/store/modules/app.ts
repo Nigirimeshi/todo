@@ -6,12 +6,21 @@ export interface AppState {
   sidebar: {
     opened: boolean;
   };
+
+  snackbar: {
+    visibility: boolean;
+    text: string;
+  };
 }
 
 @Module({ dynamic: true, store, name: 'nav' })
 class App extends VuexModule implements AppState {
   public sidebar = {
     opened: getSidebarStatus() !== 'closed'
+  };
+  public snackbar = {
+    visibility: false,
+    text: ''
   };
 
   @Mutation
@@ -24,9 +33,31 @@ class App extends VuexModule implements AppState {
     }
   }
 
+  @Mutation
+  private SHOW_SNACKBAR(text: string): void {
+    this.snackbar.visibility = true;
+    this.snackbar.text = text;
+  }
+
+  @Mutation
+  private CLOSE_SNACKBAR(): void {
+    this.snackbar.visibility = false;
+    this.snackbar.text = '';
+  }
+
   @Action
   public toggleSidebar(): void {
     this.TOGGLE_SIDEBAR();
+  }
+
+  @Action
+  public showSnackbar(text: string): void {
+    this.SHOW_SNACKBAR(text);
+  }
+
+  @Action
+  public closeSnackbar(): void {
+    this.CLOSE_SNACKBAR();
   }
 }
 

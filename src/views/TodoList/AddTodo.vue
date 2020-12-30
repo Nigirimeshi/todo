@@ -71,9 +71,9 @@
 </template>
 
 <script lang="ts">
+import { AppModule } from '@/store/modules/app';
 import { Component, Mixins, Vue } from 'vue-property-decorator';
 
-import { SnackbarModule } from '@/store/modules/snackbar';
 import { TodoListModule } from '@/store/modules/todo-list';
 import { UserModule } from '@/store/modules/user';
 import { TodoFormMixin } from '@/views/TodoList/mixin';
@@ -98,10 +98,10 @@ export default class AddTodo extends Mixins(TodoFormMixin) {
 
     TodoListModule.add(todo)
       .then(() => {
-        SnackbarModule.showSnackbar('You have added a new project.');
+        AppModule.showSnackbar('You have added a new project.');
       })
       .catch((err: { message: string }) => {
-        SnackbarModule.showSnackbar(err.message);
+        AppModule.showSnackbar(err.message);
       })
       .finally(() => {
         this.loading = false;

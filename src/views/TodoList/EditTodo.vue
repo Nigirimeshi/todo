@@ -74,9 +74,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Vue } from 'vue-property-decorator';
+import { AppModule } from '@/store/modules/app';
+import { Component, Mixins } from 'vue-property-decorator';
 
-import { SnackbarModule } from '@/store/modules/snackbar';
 import { TodoListModule } from '@/store/modules/todo-list';
 import { UserModule } from '@/store/modules/user';
 import { TodoFormMixin } from '@/views/TodoList/mixin';
@@ -99,12 +99,12 @@ export default class EditTodo extends Mixins(TodoFormMixin) {
       .then(() => {
         this.loading = false;
         this.dialog = false;
-        SnackbarModule.showSnackbar('You have updated a project.');
+        AppModule.showSnackbar('You have updated a project.');
       })
       .catch((err) => {
         this.loading = false;
         this.dialog = false;
-        SnackbarModule.showSnackbar(err.message);
+        AppModule.showSnackbar(err.message);
       });
   }
 
