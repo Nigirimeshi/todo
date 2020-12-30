@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { Component, Watch } from 'vue-property-decorator';
 
 @Component
-export class LoginMixin extends Vue {
+export class LoginFormMixin extends Vue {
   protected valid = true;
   protected loading = false;
   protected email = '';
@@ -29,7 +29,8 @@ export class LoginMixin extends Vue {
   }
 
   @Watch('password')
-  private passwordChange(): void {
+  public passwordChange(): void {
+    this.emailErrorMessages = [];
     this.passwordErrorMessages = [];
   }
 }

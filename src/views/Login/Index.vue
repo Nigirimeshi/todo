@@ -46,19 +46,19 @@
 <script lang="ts">
 import { Component, Mixins } from 'vue-property-decorator';
 
-import Alert from '@/components/Alert/index.vue';
+import Alert from '@/components/Alert/Index.vue';
 
 import { Link, LinksModule } from '@/store/modules/links';
 import { UserModule } from '@/store/modules/user';
 import { AlertMixin } from '@/components/Alert/mixin';
-import { LoginMixin } from './mixin';
+import { LoginFormMixin } from './mixin';
 
 @Component({
   components: {
     Alert
   }
 })
-export default class Login extends Mixins(AlertMixin, LoginMixin) {
+export default class Login extends Mixins(AlertMixin, LoginFormMixin) {
   private signupURL = '/signup';
 
   get links(): Link[] {

@@ -9,8 +9,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import Navbar from '@/components/Navbar.vue';
-import NavDrawer from '@/components/NavDrawer.vue';
+import Navbar from '@/components/Nav/Navbar.vue';
+import NavDrawer from '@/components/Nav/NavDrawer.vue';
 import Snackbar from '@/components/Snackbar.vue';
 
 @Component({

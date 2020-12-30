@@ -49,7 +49,6 @@ class User extends VuexModule implements UserState {
     email = email.trim();
     password = password.trim();
     const { token } = await api.user.login(email, password);
-    console.info('get token:', token);
     setToken(token);
   }
 

@@ -13,7 +13,7 @@
     <v-container class="my-5">
       <!-- 拓展面板 -->
       <v-expansion-panels multiple>
-        <v-expansion-panel v-for="todo in myTodoList" :key="todo.id">
+        <v-expansion-panel v-for="todo in myTodoList()" :key="todo.id">
           <v-expansion-panel-header>{{ todo.title }} </v-expansion-panel-header>
 
           <v-expansion-panel-content>
@@ -29,7 +29,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import Nav from '@/components/Nav.vue';
+import Nav from '@/components/Nav/Index.vue';
 
 import { UserModule } from '@/store/modules/user';
 import { Todo, TodoListModule } from '@/store/modules/todo-list';

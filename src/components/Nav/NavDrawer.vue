@@ -12,8 +12,8 @@
         </v-col>
 
         <v-col cols="auto">
-          <!-- DialogForAddProject.vue -->
-          <DialogForAddProject />
+          <!-- AddTodo 组件 -->
+          <AddTodo />
         </v-col>
       </v-row>
     </v-container>
@@ -37,7 +37,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import DialogForAddProject from '@/components/DialogForAddProject.vue';
+import AddTodo from '@/views/TodoList/AddTodo.vue';
 
 import { AppModule } from '@/store/modules/app';
 import { Link, LinksModule } from '@/store/modules/links';
@@ -45,7 +45,7 @@ import { UserModule } from '@/store/modules/user';
 
 @Component({
   components: {
-    DialogForAddProject
+    AddTodo
   }
 })
 export default class NavDrawer extends Vue {

@@ -53,7 +53,7 @@
 
         <!-- 编辑按钮 -->
         <v-col v-if="selected.length === 1" md="2" sm="3">
-          <DialogForEditProject />
+          <EditTodo />
         </v-col>
       </v-row>
 
@@ -102,13 +102,13 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import { Todo, TodoListModule } from '@/store/modules/todo-list';
 
-import DialogForEditProject from '@/components/DialogForEditProject.vue';
-import Nav from '@/components/Nav.vue';
+import Nav from '@/components/Nav/Index.vue';
+import EditTodo from '@/views/TodoList/EditTodo.vue';
 
 @Component({
   components: {
     Nav,
-    DialogForEditProject
+    EditTodo
   }
 })
 export default class Dashboard extends Vue {
@@ -144,7 +144,7 @@ export default class Dashboard extends Vue {
   }
 
   private deleteTodo(): void {
-    TodoListModule.deleteTodoList(this.selected);
+    TodoListModule.deletes(this.selected);
     this.selected = [];
   }
 

@@ -1,8 +1,8 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator';
-import { LoginMixin } from '@/views/Login/mixin';
+import { LoginFormMixin } from '@/views/Login/mixin';
 
 @Component
-export class SignupMixin extends Mixins(LoginMixin) {
+export class SignupFormMixin extends Mixins(LoginFormMixin) {
   protected username = '';
   protected usernameRules = [
     (v: string): string | boolean => !!v || 'Username is required.',
@@ -28,5 +28,9 @@ export class SignupMixin extends Mixins(LoginMixin) {
   @Watch('username')
   private usernameChange(): void {
     this.usernameErrorMessages = [];
+  }
+
+  public passwordChange(): void {
+    this.emailErrorMessages = [];
   }
 }

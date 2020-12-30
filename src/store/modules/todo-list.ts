@@ -38,8 +38,9 @@ class TodoList extends VuexModule implements TodoListState {
   // 返回当前用户的所有待办事项。
   public get myTodoList() {
     return (username: string): Todo[] => {
-      return this.todos.filter((project: Todo) => {
-        return project.person === username;
+      return this.todos.filter((todo: Todo) => {
+        console.debug(todo);
+        return todo.person === username;
       });
     };
   }
@@ -130,7 +131,7 @@ class TodoList extends VuexModule implements TodoListState {
 
   // 新增一个待办事项。
   @Action
-  addTodo(todo: Todo): Promise<unknown> {
+  add(todo: Todo): Promise<unknown> {
     return new Promise<void>((resolve, reject) => {
       projectsCollection
         .add(todo)
@@ -146,7 +147,7 @@ class TodoList extends VuexModule implements TodoListState {
 
   // 更新一个待办事项。
   @Action
-  updateTodo(todo: Todo): Promise<unknown> {
+  update(todo: Todo): Promise<unknown> {
     const id = todo.id;
     delete todo.id;
     return new Promise((resolve, reject) => {
@@ -165,7 +166,7 @@ class TodoList extends VuexModule implements TodoListState {
 
   // 删除多个待办事项。
   @Action
-  deleteTodoList(ids: string[]): Promise<unknown> {
+  deletes(ids: string[]): Promise<unknown> {
     const errors: unknown[] = [];
     for (const id of ids) {
       projectsCollection

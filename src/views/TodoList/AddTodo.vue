@@ -1,19 +1,13 @@
 <template>
   <div>
-    <!-- 编辑项目对话框 -->
-    <v-tooltip top>
-      <template #activator="{ on, attrs }">
-        <v-btn small depressed v-bind="attrs" v-on="on" @click="fillForm" @click.stop="dialog = true">
-          <v-icon small left>mdi-pencil</v-icon>
-          <span class="text-lowercase">Edit</span>
-        </v-btn>
-      </template>
-      <span>Edit project</span>
-    </v-tooltip>
+    <!-- 创建新项目按钮 -->
+    <v-btn depressed color="" class="text-capitalize" @click.stop="dialog = true"> Add new project </v-btn>
 
+    <!-- 新建项目对话框 -->
     <v-dialog v-model="dialog" max-width="600px">
+      <!-- 对话框内容 -->
       <v-card>
-        <v-card-title>Edit Project</v-card-title>
+        <v-card-title class="grey--text">Add a new project</v-card-title>
         <v-card-text>
           <v-form ref="form" v-model="valid">
             <!-- 标题输入框 -->
@@ -64,7 +58,10 @@
 
             <div class="mt-4">
               <!-- 提交按钮 -->
-              <v-btn color="primary" @click="submit" :disabled="!valid" :loading="loading"> Update </v-btn>
+              <v-btn color="primary" class="mr-4" @click="submit" :disabled="!valid" :loading="loading"> Submit </v-btn>
+
+              <!-- 重置表单按钮 -->
+              <v-btn class="white--text" color="warning" @click="reset"> Reset </v-btn>
             </div>
           </v-form>
         </v-card-text>
@@ -74,71 +71,46 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Mixins, Vue } from 'vue-property-decorator';
 
 import { SnackbarModule } from '@/store/modules/snackbar';
 import { TodoListModule } from '@/store/modules/todo-list';
 import { UserModule } from '@/store/modules/user';
+import { TodoFormMixin } from '@/views/TodoList/mixin';
 
 @Component
-export default class DialogForEditProject extends Vue {
-  private dialog = false;
-  private loading = false;
-  private valid = true;
-  private title = '';
-  private titleRules = [
-    (v: string): string | boolean => !!v || 'Title is required',
-    (v: string): string | boolean => (v && v.length <= 40) || 'Title must be less than 40 characters.'
-  ];
-  private content = '';
-  private contentRules = [
-    (v: string): string | boolean => !!v || 'Content is required',
-    (v: string): string | boolean => (v && v.length <= 2048) || 'Content must be less than 2048 characters.'
-  ];
-  private due: null | string = null;
-  private status = 'ongoing';
-  private statusRules = [
-    (v: string): string | boolean => !!v || 'Status is required',
-    (v: string): string | boolean => this.selectableStates.indexOf(v) !== -1 || 'Status invalid.'
-  ];
-
-  get selectableStates(): string[] {
-    return TodoListModule.selectableStates;
+export default class AddTodo extends Mixins(TodoFormMixin) {
+  get username(): string {
+    return UserModule.name;
   }
 
   private submit(): void {
     // 提交时按钮变成加载中。
     this.loading = true;
 
-    const project = {
-      id: TodoListModule.selectedTodo.id,
+    const todo = {
       title: this.title,
       content: this.content,
-      person: UserModule.name,
       due: this.due,
+      person: this.username,
       status: this.status
     };
-    TodoListModule.updateTodo(project)
+
+    TodoListModule.add(todo)
       .then(() => {
-        this.loading = false;
-        this.dialog = false;
-        SnackbarModule.showSnackbar('You have updated a project.');
+        SnackbarModule.showSnackbar('You have added a new project.');
       })
-      .catch((err) => {
+      .catch((err: { message: string }) => {
+        SnackbarModule.showSnackbar(err.message);
+      })
+      .finally(() => {
         this.loading = false;
         this.dialog = false;
-        SnackbarModule.showSnackbar(err.message);
       });
   }
 
-  // 用选中项填充表单
-  private fillForm(): void {
-    if (TodoListModule.selectedTodo) {
-      this.title = TodoListModule.selectedTodo.title;
-      this.content = TodoListModule.selectedTodo.content;
-      this.due = TodoListModule.selectedTodo.due;
-      this.status = TodoListModule.selectedTodo.status;
-    }
+  private reset(): void {
+    (this.$refs.form as Vue & { reset: () => boolean }).reset();
   }
 }
 </script>
