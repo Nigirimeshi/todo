@@ -3,12 +3,22 @@ import App from '@/App.vue';
 import vuetify from '@/plugins/vuetify';
 import router from '@/router';
 import store from '@/store';
-import axios, { useRequestInterceptor } from '@/plugins/axios';
+import axios from '@/plugins/axios';
+import { auth } from '@/plugins/firebase';
+import { UserModule } from '@/store/modules/user';
 
 Vue.config.productionTip = false;
 
 Vue.prototype.$axios = axios;
-useRequestInterceptor();
+
+auth.onAuthStateChanged((user) => {
+  UserModule.setUser(user);
+  if (user) {
+    UserModule.setSignedIn(true);
+  } else {
+    UserModule.setSignedIn(false);
+  }
+});
 
 new Vue({
   router,

@@ -39,5 +39,6 @@ npm run serve
 - [ ] 功能：
   - [x] 增删改查 Todo
   - [ ] 页面加载进度条
-- [] 重构：
+  - [ ] Firebase 用户认证
+- [x] 重构：
   - [x] 用 TypeScript 重构项目

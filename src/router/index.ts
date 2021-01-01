@@ -37,7 +37,7 @@ const router = new VueRouter({
 // ⚠ 得在挂载 VueRouter 之前使用 beforeEach
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (to.name !== 'Login' && !UserModule.token)
+    if (to.name !== 'Login' && !UserModule.signedIn)
       next({
         name: 'Login',
         query: { redirect: to.fullPath }

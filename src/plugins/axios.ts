@@ -6,24 +6,22 @@ axios.defaults.timeout = 5000;
 
 const TOKEN_HEADER = 'Authorization';
 
-export function useRequestInterceptor(): void {
-  axios.interceptors.request.use(
-    (config) => {
-      if (UserModule.token) {
-        config.headers[TOKEN_HEADER] = UserModule.token;
-      }
-      return config;
-    },
-    (err) => {
-      return new Promise(() => {
-        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
-          UserModule.logout();
-        }
-        throw err;
-      });
+axios.interceptors.request.use(
+  (config) => {
+    if (UserModule.token) {
+      config.headers[TOKEN_HEADER] = UserModule.token;
     }
-  );
-}
+    return config;
+  },
+  (err) => {
+    return new Promise(() => {
+      if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+        UserModule.logout();
+      }
+      throw err;
+    });
+  }
+);
 
 axios.interceptors.response.use(
   (response) => {

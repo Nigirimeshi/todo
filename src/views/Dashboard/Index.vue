@@ -100,10 +100,11 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import { Todo, TodoListModule } from '@/store/modules/todo-list';
-
 import Nav from '@/components/Nav/Index.vue';
 import EditTodo from '@/views/TodoList/EditTodo.vue';
+
+import { Todo, TodoListModule } from '@/store/modules/todo-list';
+import { UserModule } from '@/store/modules/user';
 
 @Component({
   components: {
@@ -156,6 +157,7 @@ export default class Dashboard extends Vue {
 
   created(): void {
     TodoListModule.watcher();
+    console.log('signed in:', UserModule.signedIn);
   }
 }
 </script>
