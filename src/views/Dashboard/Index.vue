@@ -25,19 +25,6 @@
           </v-tooltip>
         </v-col>
 
-        <!-- 按人排序 -->
-        <v-col sm="3" md="2">
-          <v-tooltip top>
-            <template #activator="{ on, attrs }">
-              <v-btn small depressed v-bind="attrs" @click="sortBy('person')" v-on="on" class="grey--text">
-                <v-icon left small> mdi-account</v-icon>
-                <span class="text-lowercase">By person</span>
-              </v-btn>
-            </template>
-            <span>Sort to-do list by person</span>
-          </v-tooltip>
-        </v-col>
-
         <!-- 删除按钮 -->
         <v-col sm="3" md="2" v-if="selected.length >= 1">
           <v-tooltip top>
@@ -71,8 +58,8 @@
                         <div>{{ todo.title }}</div>
                       </v-col>
                       <v-col md="2" sm="4">
-                        <div class="caption grey--text">Person</div>
-                        <div>{{ todo.person }}</div>
+                        <div class="caption grey--text">Username</div>
+                        <div>{{ username }}</div>
                       </v-col>
                       <v-col md="2" sm="4">
                         <div class="caption grey--text">Due by</div>
@@ -140,6 +127,10 @@ export default class Dashboard extends Vue {
     return TodoListModule.todos;
   }
 
+  get username(): string {
+    return TodoListModule.username;
+  }
+
   private sortBy(prop: string): void {
     TodoListModule.sort_by(prop);
   }
@@ -157,7 +148,6 @@ export default class Dashboard extends Vue {
 
   created(): void {
     TodoListModule.watcher();
-    console.log('signed in:', UserModule.signedIn);
   }
 }
 </script>

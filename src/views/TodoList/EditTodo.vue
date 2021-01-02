@@ -87,24 +87,24 @@ export default class EditTodo extends Mixins(TodoFormMixin) {
     // 提交时按钮变成加载中。
     this.loading = true;
 
-    const project = {
+    const todo = {
       id: TodoListModule.selectedTodo.id,
       title: this.title,
       content: this.content,
-      person: UserModule.name,
       due: this.due,
-      status: this.status
+      status: this.status,
+      userID: UserModule.id
     };
-    TodoListModule.update(project)
+    TodoListModule.update(todo)
       .then(() => {
-        this.loading = false;
-        this.dialog = false;
         AppModule.showSnackbar('You have updated a project.');
       })
       .catch((err) => {
+        AppModule.showSnackbar(err.message);
+      })
+      .finally(() => {
         this.loading = false;
         this.dialog = false;
-        AppModule.showSnackbar(err.message);
       });
   }
 

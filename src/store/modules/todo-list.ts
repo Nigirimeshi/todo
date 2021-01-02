@@ -1,15 +1,16 @@
+import { UserModule } from '@/store/modules/user';
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators';
 import store from '@/store';
 import firebase from 'firebase/app';
-import { projectsCollection } from '@/plugins/firebase';
+import { auth, projectsCollection } from '@/plugins/firebase';
 
 export interface Todo {
   id?: string;
   title: string;
   content: string;
   due: null | string;
-  person: string;
   status: string;
+  userID: string;
 }
 
 export interface TodoListState {
@@ -28,21 +29,24 @@ class TodoList extends VuexModule implements TodoListState {
     id: '',
     title: '',
     content: '',
-    person: '',
     status: '',
-    due: ''
+    due: '',
+    userID: ''
   };
 
-  public selectableStates = ['ongoing', 'complete', 'overdue'];
+  public readonly selectableStates = ['ongoing', 'complete', 'overdue'];
 
   // 返回当前用户的所有待办事项。
   public get myTodoList() {
-    return (username: string): Todo[] => {
+    return (userID: string): Todo[] => {
       return this.todos.filter((todo: Todo) => {
-        console.debug(todo);
-        return todo.person === username;
+        return todo.userID === userID;
       });
     };
+  }
+
+  public get username() {
+    return UserModule.name;
   }
 
   // 增加、修改、删除待办事项。
@@ -93,9 +97,6 @@ class TodoList extends VuexModule implements TodoListState {
       case 'title':
         this.todos.sort((a, b) => (a.title < b.title ? -1 : 1));
         break;
-      case 'person':
-        this.todos.sort((a, b) => (a.person < b.person ? -1 : 1));
-        break;
     }
   }
 
@@ -110,7 +111,6 @@ class TodoList extends VuexModule implements TodoListState {
     return new Promise<void>((resolve, reject) => {
       if (!this.watched) {
         this.SET_WATCHED(true);
-        // TODO 抽象操作数据接口
         // unsubscribe can be called to stop listening for changes
         projectsCollection.onSnapshot(
           (ref) => {
@@ -121,7 +121,7 @@ class TodoList extends VuexModule implements TodoListState {
             resolve();
           },
           (err) => {
-            console.log(err);
+            console.error(err);
             reject(err);
           }
         );
@@ -131,37 +131,25 @@ class TodoList extends VuexModule implements TodoListState {
 
   // 新增一个待办事项。
   @Action
-  add(todo: Todo): Promise<unknown> {
-    return new Promise<void>((resolve, reject) => {
-      projectsCollection
-        .add(todo)
-        .then(() => {
-          resolve();
-        })
-        .catch((err) => {
-          console.log(err);
-          reject(err);
-        });
+  add(todo: Todo): Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>> {
+    return projectsCollection.add(todo).catch((err) => {
+      console.error(err);
+      return Promise.reject(err);
     });
   }
 
   // 更新一个待办事项。
   @Action
-  update(todo: Todo): Promise<unknown> {
+  update(todo: Todo): Promise<void> {
     const id = todo.id;
     delete todo.id;
-    return new Promise((resolve, reject) => {
-      projectsCollection
-        .doc(id)
-        .update(todo)
-        .then((resp) => {
-          resolve(resp);
-        })
-        .catch((err) => {
-          console.log(err);
-          reject(err);
-        });
-    });
+    return projectsCollection
+      .doc(id)
+      .update(todo)
+      .catch((err) => {
+        console.error(err);
+        return Promise.reject(err);
+      });
   }
 
   // 删除多个待办事项。
@@ -173,7 +161,7 @@ class TodoList extends VuexModule implements TodoListState {
         .doc(id)
         .delete()
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           errors.push(err);
         });
     }

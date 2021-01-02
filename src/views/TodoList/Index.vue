@@ -48,12 +48,8 @@ export default class TodoList extends Vue {
     }
   ];
 
-  get username(): string {
-    return UserModule.name;
-  }
-
   private myTodoList(): Todo[] {
-    return TodoListModule.myTodoList(this.username);
+    return TodoListModule.myTodoList(UserModule.id);
   }
 
   created(): void {

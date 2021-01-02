@@ -11,18 +11,22 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$axios = axios;
 
+let app: any;
+
 auth.onAuthStateChanged((user) => {
-  UserModule.setUser(user);
-  if (user) {
-    UserModule.setSignedIn(true);
-  } else {
-    UserModule.setSignedIn(false);
+  if (!app) {
+    UserModule.setUser(user);
+    if (user) {
+      UserModule.setSignedIn(true);
+    } else {
+      UserModule.setSignedIn(false);
+    }
+
+    app = new Vue({
+      router,
+      store,
+      vuetify,
+      render: (h) => h(App)
+    }).$mount('#app');
   }
 });
-
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: (h) => h(App)
-}).$mount('#app');

@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { UserModule } from '@/store/modules/user';
 
+Vue.use(VueRouter);
+
 const routes = [
   {
     path: '/',
@@ -45,7 +47,5 @@ router.beforeEach((to, from, next) => {
     else next();
   } else next();
 });
-
-Vue.use(VueRouter);
 
 export default router;

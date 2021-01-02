@@ -92,8 +92,8 @@ export default class AddTodo extends Mixins(TodoFormMixin) {
       title: this.title,
       content: this.content,
       due: this.due,
-      person: this.username,
-      status: this.status
+      status: this.status,
+      userID: UserModule.id
     };
 
     TodoListModule.add(todo)
