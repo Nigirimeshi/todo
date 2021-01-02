@@ -6,9 +6,9 @@
         <v-col cols="auto">
           <!-- 头像和名字 -->
           <v-avatar class="ma-2" size="100">
-            <v-img :src="avatar"></v-img>
+            <v-img :src="photoURL"></v-img>
           </v-avatar>
-          <p class="white--text text-center mb-0">{{ username }}</p>
+          <p class="white--text text-center mb-0">{{ displayName }}</p>
         </v-col>
 
         <v-col cols="auto">
@@ -63,12 +63,12 @@ export default class NavDrawer extends Vue {
     return LinksModule.data;
   }
 
-  get username(): string {
-    return UserModule.name;
+  get displayName(): string {
+    return UserModule.displayName;
   }
 
-  get avatar(): string {
-    return UserModule.avatar;
+  get photoURL(): string {
+    return UserModule.photoURL;
   }
 }
 </script>

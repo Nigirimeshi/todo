@@ -80,10 +80,6 @@ import { TodoFormMixin } from '@/views/TodoList/mixin';
 
 @Component
 export default class AddTodo extends Mixins(TodoFormMixin) {
-  get username(): string {
-    return UserModule.name;
-  }
-
   private submit(): void {
     // 提交时按钮变成加载中。
     this.loading = true;

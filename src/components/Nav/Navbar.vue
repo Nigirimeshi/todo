@@ -29,8 +29,20 @@
       </v-list>
     </v-menu>
 
+    <!-- 登录按钮 -->
+    <v-btn v-if="!signedIn" class="grey--text" depressed right :to="loginURL">
+      <span>Login</span>
+      <v-icon right>mdi-login-variant</v-icon>
+    </v-btn>
+
+    <!-- 注册按钮 -->
+    <v-btn v-if="!signedIn" class="grey--text" depressed right :to="signupURL">
+      <span>Signup</span>
+      <v-icon right>mdi-account-plus</v-icon>
+    </v-btn>
+
     <!-- 注销按钮 -->
-    <v-btn class="grey--text" depressed right @click="logout">
+    <v-btn v-if="signedIn" class="grey--text" depressed right @click="logout">
       <span>Logout</span>
       <v-icon right>mdi-exit-to-app</v-icon>
     </v-btn>
@@ -46,8 +58,15 @@ import { UserModule } from '@/store/modules/user';
 
 @Component
 export default class Navbar extends Vue {
+  private loginURL = '/login';
+  private signupURL = '/signup';
+
   get links(): Link[] {
     return LinksModule.data;
+  }
+
+  get signedIn(): boolean {
+    return UserModule.signedIn;
   }
 
   private toggleSidebar(): void {

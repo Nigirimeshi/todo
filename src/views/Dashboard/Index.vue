@@ -59,7 +59,7 @@
                       </v-col>
                       <v-col md="2" sm="4">
                         <div class="caption grey--text">Username</div>
-                        <div>{{ username }}</div>
+                        <div>{{ displayName }}</div>
                       </v-col>
                       <v-col md="2" sm="4">
                         <div class="caption grey--text">Due by</div>
@@ -91,7 +91,6 @@ import Nav from '@/components/Nav/Index.vue';
 import EditTodo from '@/views/TodoList/EditTodo.vue';
 
 import { Todo, TodoListModule } from '@/store/modules/todo-list';
-import { UserModule } from '@/store/modules/user';
 
 @Component({
   components: {
@@ -127,7 +126,7 @@ export default class Dashboard extends Vue {
     return TodoListModule.todos;
   }
 
-  get username(): string {
+  get displayName(): string {
     return TodoListModule.username;
   }
 

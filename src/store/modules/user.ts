@@ -1,4 +1,4 @@
-import { auth } from '@/plugins/firebase';
+import { auth, profilesCollection } from '@/plugins/firebase';
 import firebase from 'firebase/app';
 import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-decorators';
 import store from '@/store';
@@ -10,8 +10,8 @@ export const DEFAULT_PHOTO_URL = '/avatar04.jpg';
 export interface UserState {
   id: string;
   token: string;
-  name: string;
-  avatar: string;
+  displayName: string;
+  photoURL: string;
   email: string;
   signedIn: boolean;
 }
@@ -20,8 +20,8 @@ export interface UserState {
 class User extends VuexModule implements UserState {
   public id = '';
   public token = getToken() || '';
-  public name = 'Yang';
-  public avatar = DEFAULT_PHOTO_URL;
+  public displayName = 'Yang';
+  public photoURL = DEFAULT_PHOTO_URL;
   public email = '';
   public signedIn = false;
 
@@ -37,12 +37,12 @@ class User extends VuexModule implements UserState {
 
   @Mutation
   private SET_NAME(name: string): void {
-    this.name = name;
+    this.displayName = name;
   }
 
   @Mutation
   private SET_AVATAR(avatar: string): void {
-    this.avatar = avatar;
+    this.photoURL = avatar;
   }
 
   @Mutation
@@ -92,12 +92,18 @@ class User extends VuexModule implements UserState {
   }
 }
 
+interface Profile {
+  email: string;
+  displayName: string;
+  photoURL: string;
+}
+
 @Module({ dynamic: true, store, name: 'user' })
-class FirebaseUser extends VuexModule implements UserState {
+class User2 extends VuexModule implements UserState {
   public id = '';
   public token = '';
-  public name = '';
-  public avatar = '';
+  public displayName = '';
+  public photoURL = '';
   public email = '';
   public signedIn = false;
 
@@ -112,13 +118,13 @@ class FirebaseUser extends VuexModule implements UserState {
   }
 
   @Mutation
-  private SET_NAME(name: string): void {
-    this.name = name;
+  private SET_DISPLAY_NAME(name: string): void {
+    this.displayName = name;
   }
 
   @Mutation
-  private SET_AVATAR(avatar: string): void {
-    this.avatar = avatar;
+  private SET_PHOTO_URL(url: string): void {
+    this.photoURL = url;
   }
 
   @Mutation
@@ -136,13 +142,13 @@ class FirebaseUser extends VuexModule implements UserState {
     if (user) {
       this.SET_ID(user.uid);
       this.SET_EMAIL(typeof user.email === 'string' ? user.email : '');
-      this.SET_NAME(typeof user.displayName === 'string' ? user.displayName : '');
-      this.SET_AVATAR(typeof user.photoURL === 'string' ? user.photoURL : DEFAULT_PHOTO_URL);
+      this.SET_DISPLAY_NAME(typeof user.displayName === 'string' ? user.displayName : '');
+      this.SET_PHOTO_URL(typeof user.photoURL === 'string' ? user.photoURL : DEFAULT_PHOTO_URL);
     } else {
       this.SET_ID('');
       this.SET_EMAIL('');
-      this.SET_NAME('');
-      this.SET_AVATAR(DEFAULT_PHOTO_URL);
+      this.SET_DISPLAY_NAME('');
+      this.SET_PHOTO_URL(DEFAULT_PHOTO_URL);
     }
   }
 
@@ -180,22 +186,39 @@ class FirebaseUser extends VuexModule implements UserState {
   }
 
   @Action
-  public async signup(userInfo: { email: string; username: string; password: string }) {
-    let { email, username, password } = userInfo;
+  public async signup(userInfo: { email: string; displayName: string; password: string; photoURL?: string }) {
+    let { email, displayName, password, photoURL } = userInfo;
     email = email.trim();
-    username = username.trim();
+    displayName = displayName.trim();
     password = password.trim();
+    photoURL = photoURL?.trim();
 
     const { user } = await auth.createUserWithEmailAndPassword(email, password).catch((reason) => {
-      console.error(reason);
+      console.error('create user error:', reason);
       return Promise.reject(reason);
     });
 
     if (user) {
-      await user.updateProfile({ displayName: username }).catch((reason) => {
-        console.error(reason);
+      await user.updateProfile({ displayName: displayName, photoURL: photoURL }).catch((reason) => {
+        console.error('update profile error:', reason);
         return Promise.reject(reason);
       });
+
+      // 创建用户资料。
+      const profile: Profile = {
+        email: email,
+        displayName: displayName,
+        photoURL: ''
+      };
+      await profilesCollection
+        .doc(user.uid)
+        .set(profile)
+        .catch((reason) => {
+          console.error('create user profile error:', reason);
+          user.delete();
+          return Promise.reject(reason);
+        });
+
       this.setUser(user);
       this.setSignedIn(true);
     }
@@ -216,4 +239,4 @@ class FirebaseUser extends VuexModule implements UserState {
   }
 }
 
-export const UserModule = getModule(FirebaseUser);
+export const UserModule = getModule(User2);

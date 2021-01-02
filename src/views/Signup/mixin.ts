@@ -3,12 +3,12 @@ import { LoginFormMixin } from '@/views/Login/mixin';
 
 @Component
 export class SignupFormMixin extends Mixins(LoginFormMixin) {
-  protected username = '';
-  protected usernameRules = [
+  protected displayName = '';
+  protected displayNameRules = [
     (v: string): string | boolean => !!v || 'Username is required.',
     (v: string): string | boolean => (v && v.length <= 30) || 'Username must be less than 30 characters.'
   ];
-  protected usernameErrorMessages = [];
+  protected displayNameErrorMessages = [];
   public passwordRules = [
     (v: string): string | boolean => !!v || 'Password is required.',
     (v: string): string | boolean =>
@@ -25,9 +25,9 @@ export class SignupFormMixin extends Mixins(LoginFormMixin) {
     return v === this.password;
   }
 
-  @Watch('username')
-  private usernameChange(): void {
-    this.usernameErrorMessages = [];
+  @Watch('displayName')
+  private displayNameChange(): void {
+    this.displayNameErrorMessages = [];
   }
 
   public passwordChange(): void {

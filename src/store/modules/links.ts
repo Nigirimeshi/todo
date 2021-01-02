@@ -23,17 +23,17 @@ class Links extends VuexModule implements LinksState {
       text: 'Todos',
       icon: 'mdi-folder',
       route: '/todo-list'
-    },
-    {
-      text: 'Login',
-      icon: 'mdi-login-variant',
-      route: '/login'
-    },
-    {
-      text: 'Signup',
-      icon: 'mdi-account-plus',
-      route: '/signup'
     }
+    // {
+    //   text: 'Login',
+    //   icon: 'mdi-login-variant',
+    //   route: '/login'
+    // },
+    // {
+    //   text: 'Signup',
+    //   icon: 'mdi-account-plus',
+    //   route: '/signup'
+    // }
   ];
 }
 

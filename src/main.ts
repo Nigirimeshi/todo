@@ -11,7 +11,7 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$axios = axios;
 
-let app: any;
+let app: unknown;
 
 auth.onAuthStateChanged((user) => {
   if (!app) {

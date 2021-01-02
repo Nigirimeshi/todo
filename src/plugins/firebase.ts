@@ -12,7 +12,8 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 // collection references
-const projectsCollection = db.collection('projects');
+const todosCollection = db.collection('todos');
+const profilesCollection = db.collection('profiles');
 
 // export utils/refs
-export { db, auth, projectsCollection };
+export { db, auth, todosCollection, profilesCollection };

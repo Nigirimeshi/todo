@@ -1,8 +1,9 @@
+import user from '@/api/v1/user';
 import { UserModule } from '@/store/modules/user';
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators';
 import store from '@/store';
 import firebase from 'firebase/app';
-import { auth, projectsCollection } from '@/plugins/firebase';
+import { todosCollection } from '@/plugins/firebase';
 
 export interface Todo {
   id?: string;
@@ -45,8 +46,9 @@ class TodoList extends VuexModule implements TodoListState {
     };
   }
 
+  // TODO 根据 userID 查询用户名。
   public get username() {
-    return UserModule.name;
+    return UserModule.displayName;
   }
 
   // 增加、修改、删除待办事项。
@@ -112,7 +114,7 @@ class TodoList extends VuexModule implements TodoListState {
       if (!this.watched) {
         this.SET_WATCHED(true);
         // unsubscribe can be called to stop listening for changes
-        projectsCollection.onSnapshot(
+        todosCollection.onSnapshot(
           (ref) => {
             ref.docChanges().forEach((change) => {
               const { newIndex, oldIndex, doc, type } = change;
@@ -132,7 +134,7 @@ class TodoList extends VuexModule implements TodoListState {
   // 新增一个待办事项。
   @Action
   add(todo: Todo): Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>> {
-    return projectsCollection.add(todo).catch((err) => {
+    return todosCollection.add(todo).catch((err) => {
       console.error(err);
       return Promise.reject(err);
     });
@@ -143,7 +145,7 @@ class TodoList extends VuexModule implements TodoListState {
   update(todo: Todo): Promise<void> {
     const id = todo.id;
     delete todo.id;
-    return projectsCollection
+    return todosCollection
       .doc(id)
       .update(todo)
       .catch((err) => {
@@ -157,7 +159,7 @@ class TodoList extends VuexModule implements TodoListState {
   deletes(ids: string[]): Promise<unknown> {
     const errors: unknown[] = [];
     for (const id of ids) {
-      projectsCollection
+      todosCollection
         .doc(id)
         .delete()
         .catch((err) => {

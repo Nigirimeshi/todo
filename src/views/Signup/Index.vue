@@ -20,14 +20,14 @@
               ></v-text-field>
 
               <v-text-field
-                label="Username"
+                label="Display Name"
                 prepend-icon="mdi-form-textbox"
                 required
-                v-model="username"
-                :rules="usernameRules"
+                v-model="displayName"
+                :rules="displayNameRules"
                 :counter="30"
                 error-count="1"
-                :error-messages="usernameErrorMessages"
+                :error-messages="displayNameErrorMessages"
               ></v-text-field>
 
               <v-text-field
@@ -99,14 +99,14 @@ export default class Signup extends Mixins(SignupFormMixin, AlertMixin) {
 
     const signupForm = {
       email: this.email,
-      username: this.username,
+      displayName: this.displayName,
       password: this.password
     };
 
     UserModule.signup(signupForm)
       .then(() => {
         this.emailErrorMessages = [];
-        this.usernameErrorMessages = [];
+        this.displayNameErrorMessages = [];
         this.passwordErrorMessages = [];
         this.alertSuccess('Success!');
         this.$router.push((this.$route.query.redirect as string) || '/');
@@ -115,8 +115,8 @@ export default class Signup extends Mixins(SignupFormMixin, AlertMixin) {
         if ('email' in err) {
           this.emailErrorMessages.push.apply(this.emailErrorMessages, err.email);
         }
-        if ('username' in err) {
-          this.usernameErrorMessages.push.apply(this.usernameErrorMessages, err.username);
+        if ('displayName' in err) {
+          this.displayNameErrorMessages.push.apply(this.displayNameErrorMessages, err.displayName);
         }
         if ('password' in err) {
           this.passwordErrorMessages.push.apply(this.passwordErrorMessages, err.password);
