@@ -6,6 +6,7 @@ import store from '@/store';
 import axios from '@/plugins/axios';
 import { auth } from '@/plugins/firebase';
 import { UserModule } from '@/store/modules/user';
+import { GroupsModule } from '@/store/modules/groups';
 
 Vue.config.productionTip = false;
 
@@ -18,6 +19,7 @@ auth.onAuthStateChanged((user) => {
     UserModule.setUser(user);
     if (user) {
       UserModule.setSignedIn(true);
+      GroupsModule.fetchUserGroup();
     } else {
       UserModule.setSignedIn(false);
     }
