@@ -59,7 +59,7 @@
                       </v-col>
                       <v-col md="2" sm="4">
                         <div class="caption grey--text">Username</div>
-                        <div>{{ displayName }}</div>
+                        <div>{{ todo.owner }}</div>
                       </v-col>
                       <v-col md="2" sm="4">
                         <div class="caption grey--text">Due by</div>
@@ -124,10 +124,6 @@ export default class Dashboard extends Vue {
 
   get todoList(): Todo[] {
     return TodoListModule.todos;
-  }
-
-  get displayName(): string {
-    return TodoListModule.username;
   }
 
   private sortBy(prop: string): void {

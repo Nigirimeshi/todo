@@ -225,8 +225,8 @@ class User2 extends VuexModule implements UserState {
   }
 
   @Action
-  public logout() {
-    auth
+  public async logout() {
+    await auth
       .signOut()
       .then(() => {
         this.setUser(null);

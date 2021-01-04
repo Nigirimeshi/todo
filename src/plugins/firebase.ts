@@ -14,6 +14,8 @@ const auth = firebase.auth();
 // collection references
 const todosCollection = db.collection('todos');
 const profilesCollection = db.collection('profiles');
+const groupsCollection = db.collection('groups');
+const userGroupCollection = db.collection('userGroup');
 
 // export utils/refs
-export { db, auth, todosCollection, profilesCollection };
+export { db, auth, todosCollection, profilesCollection, groupsCollection, userGroupCollection };

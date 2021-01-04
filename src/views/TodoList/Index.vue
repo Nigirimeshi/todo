@@ -33,6 +33,7 @@ import Nav from '@/components/Nav/Index.vue';
 
 import { UserModule } from '@/store/modules/user';
 import { Todo, TodoListModule } from '@/store/modules/todo-list';
+import { ProfilesModule } from '@/store/modules/profiles';
 
 @Component({
   components: {
