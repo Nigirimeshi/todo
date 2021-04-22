@@ -1,6 +1,6 @@
 # todo
 ## 简介
-一个一边学习 vue，vuetify，vuex，router，firebase 一边开发的 todo web 应用。
+基于 vue，vuetify，vuex，router，firebase 开发的 todo 应用。
 
 ## 项目设置
 ### 修改配置
@@ -29,6 +29,12 @@ npm install
 npm run serve
 ```
 
+## 预览
+### 首页
+![dashboard](docs/images/dashboard_001.png)
+### 编辑
+![edit](docs/images/edit_001.png)
+
 ## TodoList
 - [x] Vuex 统一管理和存储组件状态数据
 - [x] Firebase 实时更新数据
@@ -37,6 +43,7 @@ npm run serve
   - [x] 登录
   - [x] 注册
 - [ ] 功能：
+  - [x] 夜间模式切换
   - [x] 增删改查 Todo
   - [ ] 页面加载进度条
   - [ ] Firebase 用户认证
